@@ -5,7 +5,7 @@ import { treatments } from "@/lib/site";
 const t = treatments["hair-loss"];
 
 export const metadata: Metadata = {
-  title: "Hair-loss care (coming soon)",
+  title: "Hair loss & thinning",
   description: t.summary,
 };
 

@@ -92,8 +92,8 @@ export default function HowItWorksPage() {
                 we&apos;ll serve and our pricing, and we&apos;ll publish those details here before we open.
               </p>
               <p>
-                You can preview the assessment and member portal to see how things will work. The previews use sample
-                data, don&apos;t ask for health information, and don&apos;t save anything.
+                You can build a personalized plan now — it runs on your device and nothing is saved or sent. The member
+                portal is a preview with sample data.
               </p>
             </div>
           )}

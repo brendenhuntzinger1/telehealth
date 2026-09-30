@@ -5,7 +5,7 @@ import { treatments } from "@/lib/site";
 const t = treatments["men"];
 
 export const metadata: Metadata = {
-  title: "Men's health & testosterone (coming soon)",
+  title: "Testosterone (TRT) & men's health",
   description: t.summary,
 };
 
