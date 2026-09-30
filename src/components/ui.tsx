@@ -2,11 +2,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-6xl px-5 md:px-8 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full max-w-7xl px-5 sm:px-8 ${className}`}>{children}</div>;
 }
 
-export function Eyebrow({ children }: { children: ReactNode }) {
-  return <p className="text-sm font-semibold tracking-wide text-teal">{children}</p>;
+export function Eyebrow({ children, tone = "teal" }: { children: ReactNode; tone?: "teal" | "light" | "coral" }) {
+  const color = { teal: "text-teal", light: "text-sky-mid", coral: "text-coral-deep" }[tone];
+  return <p className={`text-sm font-bold uppercase tracking-[0.12em] ${color}`}>{children}</p>;
 }
 
 export function ButtonLink({
@@ -17,62 +18,75 @@ export function ButtonLink({
 }: {
   href: string;
   children: ReactNode;
-  variant?: "primary" | "secondary" | "light";
+  variant?: "primary" | "secondary" | "inverse" | "inverse-outline";
   className?: string;
 }) {
   const styles = {
     primary: "bg-teal text-white hover:bg-teal-deep",
-    secondary: "border border-ink/20 bg-white/60 text-ink hover:border-ink/50",
-    light: "bg-white text-teal-deep hover:bg-mist",
+    secondary: "border-2 border-teal text-teal hover:bg-teal-soft",
+    inverse: "bg-white text-teal-deep hover:bg-sky",
+    "inverse-outline": "border-2 border-white/70 text-white hover:bg-white/10",
   }[variant];
   return (
     <Link
       href={href}
-      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-medium transition-colors ${styles} ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-7 py-3 text-base font-semibold transition-colors ${styles} ${className}`}
     >
       {children}
     </Link>
   );
 }
 
-export function SectionHeading({
+export function Heading({
+  as: As = "h2",
+  children,
+  className = "",
+}: {
+  as?: "h1" | "h2" | "h3";
+  children: ReactNode;
+  className?: string;
+}) {
+  const size = {
+    h1: "text-[40px] leading-[1.05] sm:text-6xl lg:text-[68px]",
+    h2: "text-3xl leading-[1.1] sm:text-[44px]",
+    h3: "text-2xl leading-tight",
+  }[As];
+  return <As className={`font-display text-balance font-extrabold ${size} ${className}`}>{children}</As>;
+}
+
+export function SectionIntro({
   eyebrow,
   title,
   sub,
   align = "left",
-  as: As = "h2",
+  tone = "dark",
 }: {
   eyebrow?: string;
   title: ReactNode;
   sub?: ReactNode;
   align?: "left" | "center";
-  as?: "h1" | "h2";
+  tone?: "dark" | "light";
 }) {
   return (
-    <div className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
-      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <As
-        className={`font-display mt-3 text-balance text-ink ${
-          As === "h1" ? "text-4xl leading-[1.1] md:text-6xl" : "text-3xl leading-[1.15] md:text-[42px]"
-        }`}
-      >
-        {title}
-      </As>
-      {sub && <p className="mt-4 text-lg leading-relaxed text-muted">{sub}</p>}
+    <div className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
+      {eyebrow && <Eyebrow tone={tone === "light" ? "light" : "teal"}>{eyebrow}</Eyebrow>}
+      <Heading className={`mt-3 ${tone === "light" ? "text-white" : "text-ink"}`}>{title}</Heading>
+      {sub && <p className={`mt-5 text-lg leading-relaxed ${tone === "light" ? "text-white/85" : "text-muted"}`}>{sub}</p>}
     </div>
   );
 }
 
-export function Tag({ children, tone = "mist" }: { children: ReactNode; tone?: "mist" | "peach" | "line" }) {
+export function Pill({ children, tone = "teal" }: { children: ReactNode; tone?: "teal" | "sky" | "coral" | "outline" }) {
   const styles = {
-    mist: "bg-mist text-teal-deep",
-    peach: "bg-peach text-clay",
-    line: "border border-line bg-white text-muted",
+    teal: "bg-teal-soft text-teal-deep",
+    sky: "bg-sky text-sky-deep",
+    coral: "bg-coral-soft text-coral-deep",
+    outline: "border border-line bg-white text-muted",
   }[tone];
-  return <span className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-semibold ${styles}`}>{children}</span>;
+  return <span className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-bold ${styles}`}>{children}</span>;
 }
 
-const iconPaths: Record<string, ReactNode> = {
+const paths: Record<string, ReactNode> = {
   stethoscope: (
     <>
       <path d="M6 3v5a4 4 0 008 0V3" />
@@ -104,11 +118,6 @@ const iconPaths: Record<string, ReactNode> = {
       <path d="M10 21l2-6 3 3v3M9 11l3-3 3 2 3 1M12 8l-2 7" />
     </>
   ),
-  strength: (
-    <>
-      <path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10" />
-    </>
-  ),
   check: (
     <>
       <circle cx="12" cy="12" r="8.5" />
@@ -129,40 +138,42 @@ const iconPaths: Record<string, ReactNode> = {
       <path d="M9 8h6M9 12h6" />
     </>
   ),
+  arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+  chart: <path d="M4 19h16M7 15l4-4 3 3 5-6" />,
+  dumbbell: <path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10" />,
 };
 
-export function Icon({ name, className = "" }: { name: string; className?: string }) {
+export function Icon({ name, className = "h-6 w-6" }: { name: string; className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      width="24"
-      height="24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
       className={className}
     >
-      {iconPaths[name] ?? iconPaths.check}
+      {paths[name] ?? paths.check}
     </svg>
   );
 }
 
-export function IconBadge({ name }: { name: string }) {
+export function CheckItem({ children, tone = "teal" }: { children: ReactNode; tone?: "teal" | "light" }) {
   return (
-    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-mist text-teal">
-      <Icon name={name} />
-    </span>
+    <li className="flex gap-3">
+      <Icon name="check" className={`mt-0.5 h-5 w-5 shrink-0 ${tone === "light" ? "text-sky-mid" : "text-teal"}`} />
+      <span>{children}</span>
+    </li>
   );
 }
 
-export function CheckItem({ children }: { children: ReactNode }) {
+export function TextLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <li className="flex gap-3">
-      <Icon name="check" className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-      <span>{children}</span>
-    </li>
+    <Link href={href} className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-teal underline-offset-4 hover:underline">
+      {children}
+      <Icon name="arrow" className="h-4 w-4" />
+    </Link>
   );
 }

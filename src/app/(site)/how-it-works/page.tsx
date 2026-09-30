@@ -1,150 +1,104 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { CareRoles } from "@/components/care-roles";
 import { Faq } from "@/components/faq";
-import { ButtonLink, CheckItem, Container, IconBadge, SectionHeading, Tag } from "@/components/ui";
-import { assessmentCta, careIncludes, faqs, launch, steps } from "@/lib/site";
+import { ButtonLink, Container, Heading, Pill, SectionIntro } from "@/components/ui";
+import { assessmentCta, billingRules, faqs, launch, primaryCta, steps } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "How it works",
-  description: "How clinician-guided weight-loss care, follow-ups, maintenance and optional coaching work at Remade Clinic.",
+  description: "How getting started, clinical evaluation, individualized plans, follow-ups and optional coaching work at Remade Clinic.",
 };
 
-const roles = [
-  {
-    title: "Your clinical team",
-    tag: "Medical care",
-    items: [
-      "Medical evaluation and treatment decisions",
-      "Prescriptions, when appropriate",
-      "Dosing, side effects and medical questions",
-      "Follow-ups and plan changes",
-      "Decisions about continuing, adjusting or stopping medication",
-    ],
-  },
-  {
-    title: "Your coach (optional)",
-    tag: "Coaching add-on",
-    items: [
-      "Home or gym exercise plans",
-      "Beginner-friendly progression",
-      "Everyday nutrition habits",
-      "Check-ins and accountability",
-      "Progress tracking and plan adjustments",
-    ],
-  },
-];
+const pending = "To be confirmed before we open.";
 
 export default function HowItWorksPage() {
   return (
     <>
-      <section className="pb-12 pt-10 md:pb-16 md:pt-16">
-        <Container className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <SectionHeading
-            as="h1"
-            eyebrow="How it works"
-            title="Care that starts with you — and keeps going."
-            sub="Here's what to expect, from your first conversation to long-term support."
-          />
-          <div className="relative aspect-[3/2] overflow-hidden rounded-[32px] bg-sand">
-            <Image src="/img/phone-habits.webp" alt="Phone, walking shoes and water bottle on a kitchen table" fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+      <section>
+        <Container className="grid items-center gap-8 pb-14 pt-8 sm:pt-12 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <Pill tone="sky">How it works</Pill>
+            <Heading as="h1" className="mt-5 text-ink">
+              Understand everything before you begin.
+            </Heading>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+              What happens at each step, who takes care of what, and what you&apos;ll pay for — laid out plainly.
+            </p>
+          </div>
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[36px] bg-shell">
+            <Image src="/img/farmers-market.webp" alt="Couple choosing vegetables at a farmers market" fill priority sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
           </div>
         </Container>
       </section>
 
-      <section className="border-t border-line bg-white/60 py-16 md:py-24">
+      <section className="bg-shell py-16 sm:py-24">
         <Container>
-          <ol className="grid gap-4 md:grid-cols-2">
+          <SectionIntro eyebrow="Step by step" title="Your path" />
+          <ol className="mt-10 space-y-5">
             {steps.map((s, i) => (
-              <li key={s.title} className="flex gap-5 rounded-3xl border border-line bg-cream p-6 md:p-8">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-teal text-lg font-semibold text-white">{i + 1}</span>
+              <li key={s.title} className="grid gap-4 rounded-[28px] bg-white p-6 ring-1 ring-line sm:grid-cols-[64px_1fr] sm:p-8">
+                <span className="font-display grid h-14 w-14 place-items-center rounded-full bg-teal text-xl font-extrabold text-white">{i + 1}</span>
                 <div>
-                  <h2 className="text-xl font-semibold">{s.title}</h2>
-                  <p className="mt-2 leading-relaxed text-muted">{s.body}</p>
+                  <h2 className="font-display text-2xl font-bold">{s.title}</h2>
+                  <p className="mt-2 text-lg leading-relaxed text-muted">{s.body}</p>
                 </div>
               </li>
             ))}
           </ol>
-          <p className="mt-6 text-muted">
-            Not everyone qualifies for medication. Timelines for review and follow-up depend on your clinician and
-            your treatment.
-          </p>
         </Container>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="py-16 sm:py-24">
         <Container>
-          <SectionHeading eyebrow="What's included" title="What your care includes" />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {careIncludes.map((c) => (
-              <div key={c.title} className="rounded-3xl border border-line bg-white p-6">
-                <IconBadge name={c.icon} />
-                <h3 className="mt-4 font-semibold">{c.title}</h3>
-                <p className="mt-2 text-muted">{c.body}</p>
-                <div className="mt-4">
-                  <Tag tone={c.tag === "Optional add-on" ? "peach" : c.tag === "Clinical care" ? "mist" : "line"}>{c.tag}</Tag>
-                </div>
+          <SectionIntro eyebrow="Good to know" title="Eligibility, payment and next steps" />
+          <dl className="mt-10 grid gap-5 md:grid-cols-2">
+            {[
+              ["Who decides eligibility?", "An authorized clinician decides whether medication is appropriate for you. Not everyone qualifies."],
+              ["When do I pay?", billingRules.paymentTiming ?? `You'll see the full cost breakdown before paying anything. Exact billing timing: ${pending.toLowerCase()}`],
+              ["What if I'm not eligible for medication?", billingRules.ifNotEligible ?? `Your clinician can discuss other options, and coaching without medication is available. Billing in this case: ${pending.toLowerCase()}`],
+              ["Can I cancel?", billingRules.cancellation ?? `Cancellation terms: ${pending.toLowerCase()}`],
+              ["How often are follow-ups?", "Your clinician sets the follow-up schedule based on your treatment."],
+              ["What about maintenance?", "Decisions about continuing, adjusting or stopping medication are made with your clinician. Habit support — and coaching, if you choose it — continues."],
+            ].map(([q, a]) => (
+              <div key={q} className="rounded-[24px] bg-sky p-6">
+                <dt className="font-display text-lg font-bold text-sky-deep">{q}</dt>
+                <dd className="mt-2 text-ink">{a}</dd>
               </div>
             ))}
-          </div>
+          </dl>
         </Container>
       </section>
 
-      <section className="border-t border-line bg-sand py-16 md:py-24">
+      <section className="bg-shell py-16 sm:py-24">
         <Container>
-          <SectionHeading eyebrow="Who does what" title="Clinical care and coaching, clearly separated" />
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
-            {roles.map((r) => (
-              <div key={r.title} className="rounded-3xl bg-cream p-7">
-                <Tag tone={r.tag === "Medical care" ? "mist" : "peach"}>{r.tag}</Tag>
-                <h3 className="mt-4 text-xl font-semibold">{r.title}</h3>
-                <ul className="mt-5 space-y-3">
-                  {r.items.map((i) => (
-                    <CheckItem key={i}>{i}</CheckItem>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          <SectionIntro eyebrow="Who does what" title="Clinicians for medical care. Coaches for everyday habits." />
+          <div className="mt-10">
+            <CareRoles />
           </div>
         </Container>
       </section>
 
-      <section className="py-16 md:py-24">
-        <Container className="grid gap-10 lg:grid-cols-2">
-          <div>
-            <SectionHeading eyebrow="Follow-ups" title="Ongoing clinical follow-up" />
-            <p className="mt-5 text-lg leading-relaxed text-muted">
-              Your clinical team checks in on how you&apos;re doing — progress, side effects and how the plan fits your
-              life — and makes changes when needed. How often you meet depends on your treatment.
-            </p>
-          </div>
-          <div>
-            <SectionHeading eyebrow="Maintenance" title="Planning for the long term" />
-            <p className="mt-5 text-lg leading-relaxed text-muted">
-              Maintenance looks different for everyone. Any decision to continue, adjust or stop medication is made with
-              your treating clinician. Everyday habits — eating well, staying active and doing some strength work — can
-              help you maintain your progress, though weight changes over time are common and your plan can adjust.
-            </p>
-          </div>
-        </Container>
-      </section>
-
-      <section id="launch" className="scroll-mt-24 border-t border-line bg-white/60 py-16 md:py-24">
+      <section id="launch" className="scroll-mt-24 py-16 sm:py-24">
         <Container className="max-w-3xl">
-          <SectionHeading eyebrow="Launch status" title={launch.acceptingPatients ? "We're accepting patients" : "We're getting ready to launch"} />
+          <SectionIntro
+            eyebrow="Launch status"
+            title={launch.acceptingPatients ? "We're accepting patients" : "We're getting ready to open"}
+          />
           {!launch.acceptingPatients && (
             <div className="mt-6 space-y-4 text-lg leading-relaxed text-muted">
               <p>
-                Remade Clinic isn&apos;t accepting patients yet. We&apos;re finalizing our clinical partners, the states
-                we&apos;ll serve and our pricing, and we&apos;ll publish those details here before launch.
+                Remade Clinic isn&apos;t accepting patients yet. We&apos;re confirming our clinical practice, the states
+                we&apos;ll serve and our pricing, and we&apos;ll publish those details here before we open.
               </p>
               <p>
-                You can preview our online assessment to see how it will work. The preview doesn&apos;t ask for health
-                information, and nothing you enter is saved or sent.
+                You can preview the assessment and member portal to see how things will work. The previews use sample
+                data, don&apos;t ask for health information, and don&apos;t save anything.
               </p>
             </div>
           )}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/weight-loss">Explore weight-loss care</ButtonLink>
+            <ButtonLink href={primaryCta.href}>{primaryCta.label}</ButtonLink>
             <ButtonLink href={assessmentCta.href} variant="secondary">
               {assessmentCta.label}
             </ButtonLink>
@@ -152,9 +106,9 @@ export default function HowItWorksPage() {
         </Container>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="bg-shell py-16 sm:py-24">
         <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-          <SectionHeading eyebrow="FAQs" title="Questions, answered" />
+          <SectionIntro eyebrow="FAQs" title="Questions, answered" />
           <Faq items={faqs} />
         </Container>
       </section>

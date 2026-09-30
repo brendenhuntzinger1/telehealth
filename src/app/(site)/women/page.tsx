@@ -5,7 +5,7 @@ import { treatments } from "@/lib/site";
 const t = treatments["women"];
 
 export const metadata: Metadata = {
-  title: "Menopause care",
+  title: "Menopause care (coming soon)",
   description: t.summary,
 };
 

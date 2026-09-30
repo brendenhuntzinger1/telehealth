@@ -1,22 +1,27 @@
 import Link from "next/link";
 import { brand } from "@/lib/site";
 
-export function Logo() {
+export function Logo({ tone = "dark" }: { tone?: "dark" | "light" }) {
   return (
-    <Link href="/" className="inline-flex min-h-11 items-center gap-2.5 text-ink" aria-label={`${brand.name} home`}>
-      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden className="shrink-0">
-        <circle cx="16" cy="16" r="16" className="fill-teal" />
+    <Link
+      href="/"
+      className={`inline-flex min-h-11 items-center gap-2.5 ${tone === "light" ? "text-white" : "text-ink"}`}
+      aria-label={`${brand.name} home`}
+    >
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden className="shrink-0">
+        <rect width="34" height="34" rx="11" fill={tone === "light" ? "#ffffff" : "#0e5e5a"} />
         <path
-          d="M12 23V9.5h5a4 4 0 010 8h-5M16.5 17.5L21 23"
+          d="M12.5 24.5V10h5.2a4.3 4.3 0 010 8.6h-5.2M17.5 18.6l4.8 5.9"
           fill="none"
-          stroke="#fbf8f3"
-          strokeWidth="2.4"
+          stroke={tone === "light" ? "#0e5e5a" : "#ffffff"}
+          strokeWidth="2.6"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
+        <circle cx="25.5" cy="9" r="2.6" fill="#ef7b62" />
       </svg>
-      <span className="text-lg font-semibold tracking-tight">
-        {brand.shortName} <span className="font-normal text-muted">Clinic</span>
+      <span className="font-display text-xl font-extrabold tracking-tight">
+        Remade<span className={`ml-1 font-semibold ${tone === "light" ? "text-white/75" : "text-teal"}`}>Clinic</span>
       </span>
     </Link>
   );

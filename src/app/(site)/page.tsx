@@ -1,336 +1,370 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CareRoles } from "@/components/care-roles";
+import { DashboardPreview } from "@/components/dashboard-preview";
 import { Faq } from "@/components/faq";
-import { Plans } from "@/components/plans";
-import { ButtonLink, Container, IconBadge, SectionHeading, Tag } from "@/components/ui";
-import {
-  assessmentCta,
-  brand,
-  careIncludes,
-  coachingFeatures,
-  faqs,
-  otherCare,
-  steps,
-  supportPillars,
-} from "@/lib/site";
-
-const commitments = [
-  {
-    icon: "stethoscope",
-    title: "Clinician-directed",
-    body: "Treatment decisions are made by an authorized clinician. Medication is prescribed only when it's appropriate.",
-  },
-  {
-    icon: "receipt",
-    title: "Clear about costs",
-    body: "We'll show what membership includes and what's billed separately — like medication and labs — before you sign up.",
-  },
-  {
-    icon: "shield",
-    title: "Careful with your information",
-    body: "This website doesn't collect health information. Health details will only be gathered through secure intake once care launches.",
-  },
-  {
-    icon: "heart",
-    title: "At your pace",
-    body: "No gym required and no judgment. Start with where you are today.",
-  },
-];
-
-const homeFaqs = faqs.filter((f) =>
-  [
-    "How much does medication cost?",
-    "Will I qualify for medication?",
-    "Is coaching required?",
-    "I'm a beginner and don't like gyms. Is this for me?",
-    "What do follow-ups look like?",
-    "What happens when I reach my goal?",
-  ].includes(f.q),
-);
+import { PricingTable } from "@/components/pricing-table";
+import { ProgramPaths } from "@/components/program-paths";
+import { ButtonLink, CheckItem, Container, Eyebrow, Heading, Icon, Pill, SectionIntro, TextLink } from "@/components/ui";
+import { billingRules, brand, clinical, coaching, faqs, primaryCta, steps, supportTopics, typicalDay } from "@/lib/site";
 
 export default function Home() {
   return (
     <>
-      {/* 1. Hero */}
-      <section className="pb-16 pt-8 md:pb-24 md:pt-16">
-        <Container className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      {/* 2. Hero */}
+      <section className="overflow-hidden">
+        <Container className="grid items-center gap-8 pb-14 pt-8 sm:pt-12 lg:min-h-[640px] lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:pb-20">
           <div className="animate-fade">
-            <Tag>Medical weight-loss care</Tag>
-            <h1 className="font-display mt-5 text-balance text-[40px] leading-[1.08] text-ink md:text-6xl">
-              Personalized weight-loss care, with support that lasts.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
-              Work with an authorized clinician on a plan made for you — including GLP-1 medication when it&apos;s
-              appropriate. Practical nutrition and movement support, plus optional personal coaching, help you build
-              habits you can keep.
+            <Pill tone="sky">Medical weight loss · Nutrition · Optional coaching</Pill>
+            <Heading as="h1" className="mt-5 text-ink">
+              Weight-loss care <span className="text-teal">built around you.</span>
+            </Heading>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
+              Personalized medical care from an authorized clinician, practical guidance on food and movement, and a
+              personal coach if you want one. Medication is prescribed only when it&apos;s appropriate for you.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/weight-loss">Explore weight-loss care</ButtonLink>
+              <ButtonLink href={primaryCta.href}>{primaryCta.label}</ButtonLink>
               <ButtonLink href="/how-it-works" variant="secondary">
                 How it works
               </ButtonLink>
             </div>
-            <p className="mt-6 text-sm text-muted">No gym or fitness experience needed.</p>
+            <ul className="mt-8 grid gap-2 text-[15px] text-muted sm:grid-cols-3">
+              <CheckItem>No gym needed</CheckItem>
+              <CheckItem>See costs up front</CheckItem>
+              <CheckItem>Choose your support</CheckItem>
+            </ul>
           </div>
           <div className="relative">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[32px] bg-sand sm:aspect-[4/5]">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[36px] bg-shell sm:aspect-[5/4] lg:aspect-[4/5]">
               <Image
-                src="/img/walk-morning.webp"
-                alt="Woman walking on a tree-lined street in the morning"
+                src="/img/hero-kitchen.webp"
+                alt="Woman laughing while packing a healthy lunch in her kitchen"
                 fill
                 priority
-                sizes="(min-width: 1024px) 45vw, 100vw"
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-5 left-4 right-4 rounded-2xl bg-white/95 p-4 shadow-lg shadow-ink/5 ring-1 ring-line sm:left-auto sm:right-6 sm:w-72">
-              <p className="text-sm font-semibold">Care that goes beyond a prescription</p>
-              <p className="mt-1 text-sm text-muted">Clinical follow-up, everyday habit support and optional coaching.</p>
+            <div className="absolute -left-3 bottom-6 hidden w-64 rounded-2xl bg-white p-4 shadow-xl shadow-teal-deep/10 ring-1 ring-line sm:block lg:-left-10">
+              <p className="flex items-center gap-2 text-sm font-bold text-teal">
+                <Icon name="stethoscope" className="h-4 w-4" /> Clinician-guided
+              </p>
+              <p className="mt-1 text-sm text-muted">Your plan is built with an authorized clinician — around your life.</p>
             </div>
+            <span className="absolute -right-2 top-8 hidden h-16 w-16 rounded-full bg-coral/90 lg:block" aria-hidden />
           </div>
         </Container>
       </section>
 
-      {/* 2. What your care includes */}
-      <section className="border-t border-line bg-white/60 py-16 md:py-24">
+      {/* 3. Two ways to get support */}
+      <section id="options" className="scroll-mt-24 bg-shell py-16 sm:py-24">
         <Container>
-          <SectionHeading
-            eyebrow="What your care includes"
-            title="Medical care first. Extra support when you want it."
-            sub="Every member gets clinical care and everyday resources. Personal coaching is an optional add-on."
+          <SectionIntro
+            eyebrow="Your options"
+            title="Two ways to get support"
+            sub="Start with medical care — adding a personal coach if you like — or choose coaching on its own."
           />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {careIncludes.map((c) => (
-              <div
-                key={c.title}
-                className={`flex flex-col rounded-3xl p-5 md:p-6 ${
-                  c.tag === "Optional add-on" ? "border-2 border-dashed border-sage bg-cream" : "border border-line bg-cream"
-                }`}
-              >
-                <div className="flex items-center gap-4 lg:block">
-                  <IconBadge name={c.icon} />
-                  <h3 className="text-lg font-semibold lg:mt-5">{c.title}</h3>
-                </div>
-                <p className="mt-3 flex-1 leading-relaxed text-muted">{c.body}</p>
-                <div className="mt-4">
-                  <Tag tone={c.tag === "Optional add-on" ? "peach" : c.tag === "Clinical care" ? "mist" : "line"}>{c.tag}</Tag>
-                </div>
-              </div>
-            ))}
+          <div className="mt-10">
+            <ProgramPaths />
           </div>
         </Container>
       </section>
 
-      {/* 3. How it works */}
-      <section className="py-16 md:py-24">
+      {/* 4. How it works */}
+      <section className="py-16 sm:py-24">
         <Container>
-          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeading eyebrow="How it works" title="Getting started is simple" />
-            <Link href="/how-it-works" className="inline-flex min-h-11 items-center font-medium text-teal-deep underline underline-offset-4">
-              See the details
-            </Link>
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <SectionIntro eyebrow="How it works" title="Four clear steps" />
+            <TextLink href="/how-it-works">More about how it works</TextLink>
           </div>
-          <ol className="mt-10 grid gap-4 md:grid-cols-4">
+          <ol className="mt-10 grid gap-6 md:grid-cols-4">
             {steps.map((s, i) => (
-              <li key={s.title} className="flex gap-4 rounded-3xl border border-line bg-white p-5 md:block md:p-6">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-teal font-semibold text-white">{i + 1}</span>
-                <div>
-                  <h3 className="text-lg font-semibold md:mt-5">{s.title}</h3>
-                  <p className="mt-1 leading-relaxed text-muted md:mt-2">{s.body}</p>
-                </div>
+              <li key={s.title} className="relative">
+                <span className="font-display grid h-12 w-12 place-items-center rounded-full bg-teal text-lg font-extrabold text-white">
+                  {i + 1}
+                </span>
+                <h3 className="font-display mt-4 text-xl font-bold">{s.title}</h3>
+                <p className="mt-2 leading-relaxed text-muted">{s.body}</p>
               </li>
             ))}
           </ol>
-          <p className="mt-6 text-sm text-muted">Not everyone qualifies for medication. Your clinician will talk through what&apos;s right for you.</p>
+          <div className="mt-12 grid gap-4 rounded-[28px] bg-sky p-6 sm:p-8 md:grid-cols-3">
+            <div>
+              <p className="font-display font-bold text-sky-deep">Eligibility</p>
+              <p className="mt-1 text-ink">
+                An authorized clinician decides whether medication is appropriate. Not everyone qualifies.
+              </p>
+            </div>
+            <div>
+              <p className="font-display font-bold text-sky-deep">When you pay</p>
+              <p className="mt-1 text-ink">
+                {billingRules.paymentTiming ??
+                  "You'll see the full cost breakdown before paying anything. Exact billing timing will be published before we open."}
+              </p>
+            </div>
+            <div>
+              <p className="font-display font-bold text-sky-deep">If you&apos;re not eligible</p>
+              <p className="mt-1 text-ink">
+                {billingRules.ifNotEligible ??
+                  "Your clinician can discuss other options, and coaching without medication is available. Billing rules will be published before we open."}
+              </p>
+            </div>
+          </div>
         </Container>
       </section>
 
-      {/* 4. Support beyond medication */}
-      <section className="border-t border-line bg-sand py-16 md:py-24">
-        <Container className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="relative col-span-2 aspect-[3/2] overflow-hidden rounded-[28px]">
+      {/* 5. Support beyond the prescription */}
+      <section className="bg-shell py-16 sm:py-24">
+        <Container>
+          <SectionIntro
+            eyebrow="Beyond the prescription"
+            title="Everyday support for real life"
+            sub="Medication can help, but it's the everyday habits that carry you forward. Here's what support looks like — even if you're starting from zero."
+          />
+          <div className="mt-12 grid gap-8 lg:grid-cols-3">
+            {supportTopics.map((t) => (
+              <article key={t.title}>
+                <div className="relative aspect-[4/3] overflow-hidden rounded-[28px]">
+                  <Image src={t.image} alt={t.alt} fill sizes="(min-width: 1024px) 30vw, 100vw" className="object-cover" />
+                </div>
+                <h3 className="font-display mt-5 text-2xl font-bold">{t.title}</h3>
+                <p className="mt-2 text-lg leading-relaxed text-muted">{t.body}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-16 grid items-center gap-10 overflow-hidden rounded-[32px] bg-white lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[480px]">
               <Image
-                src="/img/couple-cooking.webp"
-                alt="Couple cooking a healthy dinner together"
+                src="/img/shoes-steps.webp"
+                alt="Man tying his walking shoes on his front steps"
                 fill
-                sizes="(min-width: 1024px) 45vw, 100vw"
+                sizes="(min-width: 1024px) 40vw, 100vw"
                 className="object-cover"
               />
             </div>
-            <div className="relative aspect-square overflow-hidden rounded-[28px]">
-              <Image src="/img/band-row.webp" alt="Woman doing a seated resistance band exercise at home" fill sizes="(min-width: 1024px) 22vw, 50vw" className="object-cover" />
-            </div>
-            <div className="relative aspect-square overflow-hidden rounded-[28px]">
-              <Image src="/img/friends-walk.webp" alt="Two friends walking in a park" fill sizes="(min-width: 1024px) 22vw, 50vw" className="object-cover" />
+            <div className="px-6 pb-8 sm:px-10 lg:py-10 lg:pl-0">
+              <Eyebrow tone="coral">A real weekday</Eyebrow>
+              <Heading className="mt-3 text-ink">Consistency, not perfection</Heading>
+              <p className="mt-4 text-lg text-muted">
+                Small, repeatable steps build momentum. Here&apos;s an example of how support can fit a busy day.
+              </p>
+              <ol className="mt-7 space-y-4">
+                {typicalDay.map((d) => (
+                  <li key={d.time} className="grid grid-cols-[84px_1fr] gap-4">
+                    <span className="pt-0.5 text-sm font-bold text-teal">{d.time}</span>
+                    <div>
+                      <p className="font-semibold">{d.title}</p>
+                      <p className="text-muted">{d.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
-          <div>
-            <SectionHeading
-              eyebrow="Support beyond medication"
-              title="Small, steady habits make the difference."
-              sub="Medication can help, but everyday habits matter too. Our resources are made for real life — including if you're starting from zero."
-            />
-            <ul className="mt-8 space-y-5">
-              {supportPillars.map((p) => (
-                <li key={p.title} className="flex gap-4">
-                  <IconBadge name={p.icon} />
-                  <div>
-                    <h3 className="font-semibold">{p.title}</h3>
-                    <p className="mt-1 leading-relaxed text-muted">{p.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            <div className="rounded-[28px] bg-teal-soft p-7">
+              <h3 className="font-display text-xl font-bold text-teal-deep">Why strength matters</h3>
+              <p className="mt-2 leading-relaxed text-teal-deep">
+                When you lose weight, some of what you lose can be muscle. Regular strength training — even simple moves at
+                home — can help support muscle while you lose weight.
+              </p>
+            </div>
+            <div className="rounded-[28px] bg-sky p-7">
+              <h3 className="font-display text-xl font-bold text-sky-deep">Support for the long term</h3>
+              <p className="mt-2 leading-relaxed text-ink">
+                Maintenance is personal. Decisions about continuing, adjusting or stopping medication are made with your
+                clinician, and habit support stays with you along the way.
+              </p>
+            </div>
           </div>
         </Container>
       </section>
 
-      {/* 5. Optional coaching */}
-      <section className="py-16 md:py-24">
-        <Container className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <Tag tone="peach">Optional add-on</Tag>
-            <SectionHeading
-              title="Want a coach in your corner?"
-              sub="Add personal coaching for a plan built around you and someone checking in along the way."
-            />
-            <ul className="mt-8 grid gap-x-6 gap-y-4 sm:grid-cols-2">
-              {coachingFeatures.map((f) => (
-                <li key={f.title}>
-                  <p className="font-semibold">{f.title}</p>
-                  <p className="mt-1 text-muted">{f.body}</p>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 rounded-2xl bg-mist p-5 text-[15px] leading-relaxed text-teal-deep">
-              <strong>Coaching isn&apos;t medical care.</strong> Questions about medication, side effects, dosing or other
-              medical concerns always go to your clinical team.
+      {/* 6. Optional personal coaching */}
+      <section className="py-16 sm:py-24">
+        <Container>
+          <SectionIntro
+            eyebrow="Optional personal coaching"
+            title="A coach who knows your name — and your schedule"
+            sub="Add one-on-one coaching to medical care, or choose it on its own. Plans are matched to your experience, equipment and time."
+          />
+          <div className="mt-10 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="rounded-[28px] bg-coral-soft p-7 sm:p-9">
+              <div className="flex items-center gap-4">
+                <span className="grid h-16 w-16 place-items-center rounded-full border-2 border-dashed border-coral-deep/40 text-coral-deep" aria-hidden>
+                  <Icon name="person" className="h-7 w-7" />
+                </span>
+                <div>
+                  <p className="font-display text-lg font-bold">Your coach</p>
+                  <p className="text-sm text-muted">{coaching.assignedCoachLabel}</p>
+                </div>
+              </div>
+              <h3 className="font-display mt-8 text-xl font-bold">
+                {coaching.scheduleConfirmed ? "Your coaching schedule" : "Example coaching schedule"}
+              </h3>
+              <ul className="mt-4 space-y-4">
+                {coaching.exampleSchedule.map((s) => (
+                  <li key={s.label} className="flex gap-4">
+                    <span className="w-28 shrink-0 font-bold text-coral-deep">{s.label}</span>
+                    <span className="text-ink">{s.detail}</span>
+                  </li>
+                ))}
+              </ul>
+              {!coaching.scheduleConfirmed && (
+                <p className="mt-5 text-sm text-muted">Example only — the exact check-in schedule will be confirmed before launch.</p>
+              )}
             </div>
-            <div className="mt-8">
-              <ButtonLink href="/coaching" variant="secondary">
-                Learn about coaching
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="rounded-[28px] border border-line bg-white p-7">
+                <Pill tone="teal">Included for every member</Pill>
+                <ul className="mt-5 space-y-3">
+                  {coaching.included.map((i) => (
+                    <CheckItem key={i}>{i}</CheckItem>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-[28px] bg-teal p-7 text-white">
+                <Pill tone="coral">Paid personal coaching</Pill>
+                <ul className="mt-5 space-y-3">
+                  {coaching.paid.map((i) => (
+                    <CheckItem key={i} tone="light">
+                      {i}
+                    </CheckItem>
+                  ))}
+                </ul>
+              </div>
+              <p className="rounded-2xl bg-shell p-5 text-[15px] text-muted sm:col-span-2">
+                <strong className="text-ink">Coaches are not dietitians or clinicians.</strong> Medication and medical
+                questions always go to your clinical team.
+              </p>
+            </div>
+          </div>
+          <div className="mt-8">
+            <TextLink href="/coaching">Learn about coaching</TextLink>
+          </div>
+        </Container>
+      </section>
+
+      {/* 7. Member experience preview */}
+      <section className="bg-sky py-16 sm:py-24">
+        <Container className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <Eyebrow>Member experience</Eyebrow>
+            <Heading className="mt-3 text-ink">Everything in one calm place</Heading>
+            <p className="mt-5 text-lg leading-relaxed text-ink/80">
+              See upcoming appointments, weekly goals and progress over time — with clinical and coaching messages kept
+              clearly apart.
+            </p>
+            <ul className="mt-6 space-y-3 text-ink">
+              <CheckItem>Clinical messages stay in a secure patient system</CheckItem>
+              <CheckItem>Coaching messages about habits and movement</CheckItem>
+              <CheckItem>Optional workouts and nutrition ideas</CheckItem>
+            </ul>
+            <p className="mt-6 text-sm text-sky-deep">This is a design preview with sample data. Member accounts aren&apos;t live yet.</p>
+            <div className="mt-6">
+              <ButtonLink href="/portal" variant="secondary">
+                Explore the preview
               </ButtonLink>
             </div>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[32px] bg-sand lg:aspect-[4/5]">
-            <Image
-              src="/img/home-chair-squat.webp"
-              alt="Man doing a chair squat exercise in his living room"
-              fill
-              sizes="(min-width: 1024px) 40vw, 100vw"
-              className="object-cover"
-            />
-          </div>
+          <DashboardPreview />
         </Container>
       </section>
 
-      {/* 6. Other care options */}
-      <section className="border-t border-line bg-white/60 py-16 md:py-20">
+      {/* 8. Pricing */}
+      <section id="pricing" className="scroll-mt-24 py-16 sm:py-24">
         <Container>
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <SectionHeading eyebrow="Other care" title="More ways we can help" />
-            <Link href="/other-care" className="inline-flex min-h-11 items-center font-medium text-teal-deep underline underline-offset-4">
-              View all care
-            </Link>
-          </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {otherCare.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/${c.slug}`}
-                className="group flex items-center gap-4 rounded-3xl border border-line bg-cream p-4 transition-colors hover:border-teal"
-              >
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-sand">
-                  <Image src={c.image} alt="" fill sizes="80px" className="object-cover" />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-semibold">{c.name}</p>
-                  <p className="mt-1 text-sm text-muted">
-                    {c.status === "coming-soon" ? <span className="font-medium text-clay">Coming soon</span> : c.summary}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* 7. Plans and pricing */}
-      <section className="py-16 md:py-24">
-        <Container>
-          <SectionHeading
-            eyebrow="Plans & pricing"
-            title="Start with medical care. Add coaching if you like."
-            sub="One base plan for clinical care, with personal coaching as an optional add-on."
+          <SectionIntro
+            eyebrow="Pricing"
+            title="Clear costs, before you commit"
+            sub="Every cost is listed on its own line — membership, medication, labs and coaching — so there are no surprises."
           />
           <div className="mt-10">
-            <Plans />
+            <PricingTable compact />
+          </div>
+          <div className="mt-6">
+            <TextLink href="/pricing">Full pricing details</TextLink>
           </div>
         </Container>
       </section>
 
-      {/* 8. Trust and FAQs */}
-      <section className="border-t border-line bg-sand py-16 md:py-24">
+      {/* 9. Trust and FAQs */}
+      <section className="bg-shell py-16 sm:py-24">
         <Container>
-          <SectionHeading eyebrow="Our commitments" title="What you can expect from us" />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {commitments.map((c) => (
-              <div key={c.title} className="rounded-3xl bg-cream p-5 md:p-6">
-                <div className="flex items-center gap-4 lg:block">
-                  <IconBadge name={c.icon} />
-                  <h3 className="font-semibold lg:mt-4">{c.title}</h3>
-                </div>
-                <p className="mt-2 leading-relaxed text-muted">{c.body}</p>
+          <SectionIntro eyebrow="Who provides your care" title="Clear roles, from day one" />
+          <div className="mt-10 grid gap-5 lg:grid-cols-[1fr_2fr]">
+            <div className="rounded-[28px] bg-white p-7">
+              <h3 className="font-display text-xl font-bold">Medical care</h3>
+              <p className="mt-3 leading-relaxed text-muted">
+                {clinical.practiceName
+                  ? `Medical care is provided by licensed clinicians at ${clinical.practiceName}.`
+                  : "Medical care will be provided by independently licensed clinicians. We'll name our clinical practice and publish clinician credentials before we open."}
+              </p>
+              {clinical.clinicians.length > 0 && (
+                <ul className="mt-4 space-y-2">
+                  {clinical.clinicians.map((c) => (
+                    <li key={c.name}>
+                      <strong>{c.name}</strong>, {c.credentials} — {c.role}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <h3 className="font-display mt-7 text-xl font-bold">Coaching</h3>
+              <p className="mt-3 leading-relaxed text-muted">
+                Led by our founder{brand.founder.name ? `, ${brand.founder.name}` : ""}.{" "}
+                {brand.founder.credentials ?? "Coaching credentials will be listed here once confirmed."}
+              </p>
+              <h3 className="font-display mt-7 text-xl font-bold">Contact</h3>
+              <p className="mt-3 text-muted">
+                {brand.supportEmail ?? "Contact details will be published before we open."}
+              </p>
+            </div>
+            <CareRoles />
+          </div>
+
+          <div className="mt-16 grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <Eyebrow>FAQs</Eyebrow>
+              <Heading className="mt-3 text-ink">Questions, answered</Heading>
+              <p className="mt-4 text-lg text-muted">
+                Still wondering about something?{" "}
+                <Link href="/how-it-works" className="font-semibold text-teal underline underline-offset-4">
+                  See how it works
+                </Link>
+                .
+              </p>
+            </div>
+            <Faq items={faqs} />
+          </div>
+        </Container>
+      </section>
+
+      {/* Closing */}
+      <section className="py-16 sm:py-24">
+        <Container>
+          <div className="grid items-center gap-8 overflow-hidden rounded-[36px] bg-teal text-white lg:grid-cols-2">
+            <div className="p-8 sm:p-12">
+              <Heading className="text-white">Start where you are.</Heading>
+              <p className="mt-4 max-w-md text-lg text-white/85">
+                Compare your options, see every cost, and choose the support that fits your life.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <ButtonLink href={primaryCta.href} variant="inverse">
+                  {primaryCta.label}
+                </ButtonLink>
+                <ButtonLink href="/how-it-works" variant="inverse-outline">
+                  How it works
+                </ButtonLink>
               </div>
-            ))}
+            </div>
+            <div className="relative aspect-[3/2] lg:aspect-auto lg:h-full lg:min-h-[360px]">
+              <Image src="/img/stroller-walk.webp" alt="Father walking with a stroller and his daughter" fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+            </div>
           </div>
-
-          <figure className="mt-12 rounded-3xl bg-white p-7 md:p-10">
-            <p className="text-sm font-semibold text-teal">A note from our founder</p>
-            <blockquote className="font-display mt-4 text-2xl leading-snug md:text-3xl">&ldquo;{brand.founder.note}&rdquo;</blockquote>
-            <figcaption className="mt-5 text-muted">
-              {brand.founder.name ? `${brand.founder.name}, ` : ""}
-              {brand.founder.role}, {brand.name}
-            </figcaption>
-          </figure>
         </Container>
-      </section>
-
-      <section className="py-16 md:py-24">
-        <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-          <div>
-            <SectionHeading eyebrow="FAQs" title="Questions, answered" />
-            <p className="mt-6 text-muted">
-              More answers on{" "}
-              <Link href="/how-it-works" className="inline-flex min-h-11 items-center text-teal-deep underline underline-offset-4">
-                How it works
-              </Link>
-            </p>
-          </div>
-          <Faq items={homeFaqs} />
-        </Container>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="px-5 pb-16 md:px-8 md:pb-24">
-        <div className="mx-auto max-w-6xl rounded-[36px] bg-teal-deep px-6 py-14 text-center text-white md:py-20">
-          <h2 className="font-display text-balance text-3xl md:text-5xl">Ready to learn more?</h2>
-          <p className="mx-auto mt-4 max-w-lg text-lg text-white/80">
-            See how our weight-loss care works, or take a quick look at the assessment we&apos;re building.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <ButtonLink href="/weight-loss" variant="light">
-              Explore weight-loss care
-            </ButtonLink>
-            <Link
-              href={assessmentCta.href}
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/40 px-6 font-medium text-white hover:border-white"
-            >
-              {assessmentCta.label}
-            </Link>
-          </div>
-        </div>
       </section>
     </>
   );

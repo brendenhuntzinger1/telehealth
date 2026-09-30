@@ -1,114 +1,105 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { CareRoles } from "@/components/care-roles";
 import { Faq } from "@/components/faq";
-import { ButtonLink, CheckItem, Container, SectionHeading, Tag } from "@/components/ui";
-import { coachingFeatures, launch, plans } from "@/lib/site";
+import { ButtonLink, CheckItem, Container, Heading, Icon, Pill, SectionIntro } from "@/components/ui";
+import { coaching, coachingOnlyOffered } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Personal coaching",
-  description: "Optional one-on-one coaching for movement, habits and accountability — beginner-friendly, at home or in the gym.",
+  description: "One-on-one coaching for movement, nutrition habits and accountability — at home or in the gym, beginners welcome.",
 };
 
-const sampleWeek = [
-  { day: "Mon", plan: "20-minute walk", note: "Any pace that feels comfortable" },
-  { day: "Tue", plan: "Home strength, 15 min", note: "Chair squats, wall push-ups, band rows" },
-  { day: "Wed", plan: "Rest or gentle stretch", note: "" },
-  { day: "Thu", plan: "20-minute walk", note: "Try adding a few minutes" },
-  { day: "Fri", plan: "Home strength, 15 min", note: "Same moves — a few more reps if it feels good" },
-  { day: "Sat", plan: "Something you enjoy", note: "A bike ride, gardening, a walk with a friend" },
-  { day: "Sun", plan: "Weekly check-in", note: "How you felt, what worked, what to adjust" },
+const matched = [
+  { title: "Your experience", body: "Never exercised? Coming back after a break? Plans start where you are.", icon: "heart" },
+  { title: "Your equipment", body: "A chair and a wall, a resistance band, a home setup or a full gym.", icon: "dumbbell" },
+  { title: "Your schedule", body: "Ten free minutes or forty — your plan fits the time you actually have.", icon: "calendar" },
+];
+
+const beginnerWeek = [
+  ["Mon", "20-minute walk", "Any comfortable pace"],
+  ["Tue", "Home strength · 15 min", "Chair squats, wall push-ups, band rows"],
+  ["Wed", "Rest or gentle stretching", ""],
+  ["Thu", "20-minute walk", "Add a couple of minutes if it feels good"],
+  ["Fri", "Home strength · 15 min", "Same moves, a few more reps"],
+  ["Sat", "Something you enjoy", "A bike ride, gardening, a walk with family"],
+  ["Sun", "Weekly check-in", "What worked, what felt hard, what to adjust"],
 ];
 
 const coachingFaqs = [
-  {
-    q: "Do I need a gym?",
-    a: "No. Most beginners start at home with walking and simple exercises using a chair, a wall or a resistance band. If you have a gym, your plan can use it.",
-  },
-  {
-    q: "What if I've never exercised?",
-    a: "That's okay — plans start where you are. Your coach begins with short, manageable sessions and builds up gradually.",
-  },
-  {
-    q: "Can my coach help with medication or side effects?",
-    a: "No. Coaches don't give medical advice. Medication, dosing, side effects and medical concerns always go to your clinical team.",
-  },
-  {
-    q: "Is coaching included in the base plan?",
-    a: "No. Every member gets general nutrition and movement resources. One-on-one coaching is an optional add-on.",
-  },
+  { q: "Do I need a gym?", a: "No. Most beginners start at home. If you have gym access, your plan can use it." },
+  { q: "What if I've never exercised?", a: "That's okay. Your coach starts with short, manageable sessions and builds up gradually." },
+  { q: "Is my coach a dietitian?", a: "No. Coaches offer general nutrition habit support within their qualifications — not medical nutrition therapy." },
+  { q: "Can my coach help with medication?", a: "No. Medication, dosing, side effects and medical questions always go to your clinical team." },
 ];
 
 export default function CoachingPage() {
   return (
     <>
-      <section className="pb-16 pt-10 md:pb-24 md:pt-16">
-        <Container className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+      <section>
+        <Container className="grid items-center gap-8 pb-14 pt-8 sm:pt-12 lg:grid-cols-[1fr_0.95fr] lg:gap-14 lg:pb-20">
           <div className="animate-fade">
             <div className="flex flex-wrap gap-2">
-              <Tag>Personal coaching</Tag>
-              <Tag tone="peach">Optional add-on</Tag>
+              <Pill tone="coral">Personal coaching</Pill>
+              <Pill tone="sky">With or without medication</Pill>
             </div>
-            <h1 className="font-display mt-5 text-balance text-4xl leading-[1.1] md:text-6xl">
-              Support at your pace, from someone in your corner.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
-              Add one-on-one coaching to your care for a plan that fits your body, your schedule and your space — plus
-              regular check-ins to keep you going. Beginners very welcome.
+            <Heading as="h1" className="mt-5 text-ink">
+              Support from a coach who fits your life.
+            </Heading>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
+              A one-on-one plan for movement and everyday habits, regular check-ins, and someone in your corner. Add it to
+              medical care{coachingOnlyOffered ? ", or choose coaching on its own" : ""}. Beginners very welcome.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/pricing">See plans</ButtonLink>
+              <ButtonLink href="/pricing">See pricing</ButtonLink>
               <ButtonLink href="/weight-loss" variant="secondary">
-                Explore weight-loss care
+                Pair with medical care
               </ButtonLink>
             </div>
           </div>
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] bg-sand">
-            <Image
-              src="/img/band-row.webp"
-              alt="Woman doing a seated resistance band exercise at home"
-              fill
-              priority
-              sizes="(min-width: 1024px) 40vw, 100vw"
-              className="object-cover"
-            />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[36px] bg-shell lg:aspect-[4/5]">
+            <Image src="/img/living-room-squat.webp" alt="Woman doing a bodyweight squat in her living room" fill priority sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
           </div>
         </Container>
       </section>
 
-      <section className="border-t border-line bg-white/60 py-16 md:py-24">
+      <section className="bg-shell py-16 sm:py-24">
         <Container>
-          <SectionHeading eyebrow="What coaching includes" title="A plan made for you — and someone to check in" />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {coachingFeatures.map((f) => (
-              <div key={f.title} className="rounded-3xl border border-line bg-cream p-6">
-                <h3 className="text-lg font-semibold">{f.title}</h3>
-                <p className="mt-2 leading-relaxed text-muted">{f.body}</p>
+          <SectionIntro eyebrow="Made for you" title="Matched to you — not the other way around" />
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {matched.map((m) => (
+              <div key={m.title} className="rounded-[28px] bg-white p-7 ring-1 ring-line">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-coral-soft text-coral-deep">
+                  <Icon name={m.icon} />
+                </span>
+                <h3 className="font-display mt-5 text-xl font-bold">{m.title}</h3>
+                <p className="mt-2 leading-relaxed text-muted">{m.body}</p>
               </div>
             ))}
           </div>
         </Container>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="py-16 sm:py-24">
         <Container className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <SectionHeading
+            <SectionIntro
               eyebrow="Starting from zero?"
               title="An example beginner week"
-              sub="Every plan is personal. Here's what a first week might look like for someone new to exercise, at home."
+              sub="Every plan is personal. Here's what a first week at home might look like."
             />
             <p className="mt-6 leading-relaxed text-muted">
-              Over time, strength work can help support muscle as you lose weight. Your coach adds it gradually — no
-              heavy weights or gym required.
+              Strength work is added gradually — it can help support muscle while you lose weight. No heavy weights or gym
+              required.
             </p>
           </div>
-          <ol className="overflow-hidden rounded-3xl border border-line bg-white">
-            {sampleWeek.map((d) => (
-              <li key={d.day} className="grid grid-cols-[52px_1fr] gap-3 border-b border-line px-5 py-4 last:border-0 md:px-6">
-                <span className="pt-0.5 text-sm font-semibold text-teal">{d.day}</span>
+          <ol className="overflow-hidden rounded-[28px] bg-white ring-1 ring-line">
+            {beginnerWeek.map(([day, plan, note]) => (
+              <li key={day} className="grid grid-cols-[56px_1fr] gap-3 border-b border-line px-5 py-4 last:border-0 sm:px-7">
+                <span className="font-display pt-0.5 font-bold text-teal">{day}</span>
                 <div>
-                  <p className="font-medium">{d.plan}</p>
-                  {d.note && <p className="text-sm text-muted">{d.note}</p>}
+                  <p className="font-semibold">{plan}</p>
+                  {note && <p className="text-sm text-muted">{note}</p>}
                 </div>
               </li>
             ))}
@@ -116,60 +107,57 @@ export default function CoachingPage() {
         </Container>
       </section>
 
-      <section className="border-t border-line bg-sand py-16 md:py-24">
-        <Container className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-3xl bg-cream p-7">
-            <Tag>Your coach helps with</Tag>
-            <ul className="mt-5 space-y-3">
-              {["Exercise plans and progression", "Everyday nutrition habits", "Motivation, check-ins and accountability", "Tracking habits and progress"].map((i) => (
-                <CheckItem key={i}>{i}</CheckItem>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-3xl bg-cream p-7">
-            <Tag tone="peach">Your clinical team handles</Tag>
-            <ul className="mt-5 space-y-3">
-              {["Medication and prescriptions", "Dosing and side effects", "Medical questions and concerns", "Changes to your treatment plan"].map((i) => (
-                <CheckItem key={i}>{i}</CheckItem>
-              ))}
-            </ul>
-          </div>
-          <p className="text-muted md:col-span-2">
-            Nutrition support from coaches is general habit guidance within their qualifications — not medical nutrition
-            therapy.
-          </p>
-        </Container>
-      </section>
-
-      <section className="py-16 md:py-24">
-        <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+      <section className="bg-teal py-16 text-white sm:py-24">
+        <Container className="grid gap-10 lg:grid-cols-2">
           <div>
-            <SectionHeading eyebrow="Questions" title="About coaching" />
-            <p className="mt-6 text-muted">
-              {launch.pricingConfirmed && plans.coaching.price !== null
-                ? `Coaching is $${plans.coaching.price}/${plans.coaching.period}, added to your medical care plan.`
-                : "Coaching pricing will be published before launch."}
-            </p>
+            <SectionIntro tone="light" eyebrow="Check-ins" title={coaching.scheduleConfirmed ? "Your coaching rhythm" : "An example coaching rhythm"} />
+            <ul className="mt-8 space-y-5">
+              {coaching.exampleSchedule.map((s) => (
+                <li key={s.label} className="flex gap-4">
+                  <span className="w-32 shrink-0 font-display font-bold text-sky-mid">{s.label}</span>
+                  <span className="text-white/90">{s.detail}</span>
+                </li>
+              ))}
+            </ul>
+            {!coaching.scheduleConfirmed && <p className="mt-6 text-sm text-white/75">Example only — exact schedule confirmed before launch.</p>}
           </div>
-          <Faq items={coachingFaqs} />
-        </Container>
-      </section>
-
-      <section className="px-5 pb-16 md:px-8 md:pb-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 overflow-hidden rounded-[36px] bg-mist md:grid-cols-2">
-          <div className="p-8 md:p-12">
-            <h2 className="font-display text-3xl md:text-4xl">Not sure you need a coach?</h2>
-            <p className="mt-4 text-lg text-teal-deep/90">
-              You can start with medical care and our included resources, and add coaching any time.
-            </p>
-            <div className="mt-6">
-              <ButtonLink href="/how-it-works">How it works</ButtonLink>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="rounded-[24px] bg-white/10 p-6">
+              <Pill tone="sky">Included for every member</Pill>
+              <ul className="mt-4 space-y-2.5">
+                {coaching.included.map((i) => (
+                  <CheckItem key={i} tone="light">
+                    {i}
+                  </CheckItem>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-[24px] bg-white p-6 text-ink">
+              <Pill tone="coral">Paid personal coaching</Pill>
+              <ul className="mt-4 space-y-2.5">
+                {coaching.paid.map((i) => (
+                  <CheckItem key={i}>{i}</CheckItem>
+                ))}
+              </ul>
             </div>
           </div>
-          <div className="relative aspect-[3/2] md:h-full">
-            <Image src="/img/friends-walk.webp" alt="Two friends walking in a park" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+        </Container>
+      </section>
+
+      <section className="py-16 sm:py-24">
+        <Container>
+          <SectionIntro eyebrow="Who does what" title="Your coach and your clinicians work side by side" />
+          <div className="mt-10">
+            <CareRoles />
           </div>
-        </div>
+        </Container>
+      </section>
+
+      <section className="bg-shell py-16 sm:py-24">
+        <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <SectionIntro eyebrow="Questions" title="About coaching" />
+          <Faq items={coachingFaqs} />
+        </Container>
       </section>
     </>
   );

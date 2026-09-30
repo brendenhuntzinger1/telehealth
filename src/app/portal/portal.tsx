@@ -20,12 +20,12 @@ type Tab = (typeof tabs)[number]["id"];
 export function Portal() {
   const [tab, setTab] = useState<Tab>("today");
   return (
-    <div className="min-h-dvh bg-cream">
-      <div className="bg-peach px-5 py-2.5 text-center text-sm text-clay">
+    <div className="min-h-dvh bg-paper">
+      <div className="bg-coral-soft px-5 py-2.5 text-center text-sm text-coral-deep">
         <strong>Portal preview with sample data.</strong> Member accounts aren&apos;t live yet. Nothing here is saved.
       </div>
       <div className="md:grid md:grid-cols-[240px_1fr]">
-        <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-sand p-5 md:flex">
+        <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-shell p-5 md:flex">
           <Logo />
           <nav className="mt-8 space-y-1" aria-label="Portal">
             {tabs.map((t) => (
@@ -35,7 +35,7 @@ export function Portal() {
                 onClick={() => setTab(t.id)}
                 aria-current={tab === t.id ? "page" : undefined}
                 className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] transition-colors ${
-                  tab === t.id ? "bg-teal text-white" : "text-muted hover:bg-mist hover:text-ink"
+                  tab === t.id ? "bg-teal text-white" : "text-muted hover:bg-teal-soft hover:text-ink"
                 }`}
               >
                 <Icon name={t.icon} className="h-5 w-5" />
@@ -56,7 +56,7 @@ export function Portal() {
             <p className="hidden text-muted md:block">
               Week {member.week} · {member.plan}
             </p>
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-mist font-semibold text-teal-deep" aria-label="Sample member">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-teal-soft font-semibold text-teal-deep" aria-label="Sample member">
               {member.name[0]}
             </span>
           </header>
@@ -72,7 +72,7 @@ export function Portal() {
       </div>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-line bg-cream/95 px-1 pb-[max(env(safe-area-inset-bottom),8px)] pt-1 backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-line bg-paper/95 px-1 pb-[max(env(safe-area-inset-bottom),8px)] pt-1 backdrop-blur md:hidden"
         aria-label="Portal"
       >
         {tabs.map((t) => (
@@ -95,7 +95,7 @@ export function Portal() {
 function H({ title, sub }: { title: string; sub?: string }) {
   return (
     <div className="mb-6">
-      <h1 className="font-display text-3xl md:text-4xl">{title}</h1>
+      <h1 className="font-display font-extrabold text-3xl md:text-4xl">{title}</h1>
       {sub && <p className="mt-2 text-muted">{sub}</p>}
     </div>
   );
@@ -111,7 +111,7 @@ function Today({ go }: { go: (t: Tab) => void }) {
     <>
       <H title={`Good morning, ${member.name}`} sub="Here's your plan for today. Small steps count." />
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="bg-mist">
+        <Card className="bg-teal-soft">
           <p className="text-sm font-semibold text-teal-deep">Today&apos;s movement</p>
           <p className="mt-2 text-xl font-semibold">{today.movement.title}</p>
           <p className="mt-1 text-muted">{today.movement.detail}</p>
@@ -124,7 +124,7 @@ function Today({ go }: { go: (t: Tab) => void }) {
           <p className="mt-2 text-3xl font-semibold">
             {today.walkMinutes.done} <span className="text-lg font-normal text-muted">of {today.walkMinutes.goal} min</span>
           </p>
-          <div className="mt-4 h-3 overflow-hidden rounded-full bg-mist">
+          <div className="mt-4 h-3 overflow-hidden rounded-full bg-teal-soft">
             <div className="h-full rounded-full bg-teal" style={{ width: `${pct}%` }} />
           </div>
         </Card>
@@ -210,7 +210,7 @@ function Progress() {
         <div className="mt-6 flex h-40 items-end gap-2" role="img" aria-label={`Walking minutes grew from ${weeklyWalks[0]} to ${weeklyWalks[weeklyWalks.length - 1]} over ${weeklyWalks.length} weeks`}>
           {weeklyWalks.map((v, n) => (
             <div key={n} className="flex flex-1 flex-col items-center gap-2">
-              <div className="w-full rounded-t-lg bg-sage" style={{ height: `${(v / max) * 100}%` }} />
+              <div className="w-full rounded-t-lg bg-sky-mid" style={{ height: `${(v / max) * 100}%` }} />
               <span className="text-xs text-muted">W{n + 1}</span>
             </div>
           ))}
@@ -260,7 +260,7 @@ function Messages() {
           <div className="space-y-3">
             {msgs.map((m, n) => (
               <div key={n} className={`flex ${m.from === "me" ? "justify-end" : ""}`}>
-                <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${m.from === "me" ? "bg-teal text-white" : "bg-mist"}`}>
+                <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${m.from === "me" ? "bg-teal text-white" : "bg-teal-soft"}`}>
                   <p>{m.text}</p>
                   <p className={`mt-1 text-xs ${m.from === "me" ? "text-white/75" : "text-muted"}`}>{m.time}</p>
                 </div>
@@ -284,7 +284,7 @@ function Messages() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Say hi to your coach (preview)"
-              className="min-h-12 flex-1 rounded-full border border-line bg-cream px-5 outline-none focus:border-teal"
+              className="min-h-12 flex-1 rounded-full border border-line bg-paper px-5 outline-none focus:border-teal"
             />
             <button type="submit" className="min-h-12 rounded-full bg-teal px-5 font-medium text-white">
               Send
@@ -304,7 +304,7 @@ function Learn() {
       <ul className="space-y-3">
         {lessons.map((l) => (
           <li key={l.title} className="flex min-h-16 items-center gap-4 rounded-2xl border border-line bg-white p-5">
-            <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${l.done ? "bg-teal text-white" : "bg-mist text-teal-deep"}`} aria-hidden>
+            <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${l.done ? "bg-teal text-white" : "bg-teal-soft text-teal-deep"}`} aria-hidden>
               {l.done ? "✓" : "•"}
             </span>
             <div>

@@ -3,106 +3,95 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { launch } from "@/lib/site";
+import { launch, mainNav, primaryCta } from "@/lib/site";
 import { Logo } from "./logo";
-
-export const mainNav = [
-  { href: "/weight-loss", label: "Weight Loss" },
-  { href: "/other-care", label: "Other Care" },
-  { href: "/coaching", label: "Coaching" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/how-it-works", label: "How It Works" },
-];
 
 const otherCareLinks = [
   { href: "/men", label: "Men's health & testosterone" },
-  { href: "/women", label: "Menopause care" },
-  { href: "/hair-loss", label: "Hair loss (coming soon)" },
+  { href: "/women", label: "Menopause & perimenopause" },
+  { href: "/hair-loss", label: "Hair loss" },
 ];
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
-  const isActive = (href: string) =>
+  const active = (href: string) =>
     pathname === href || (href === "/other-care" && ["/men", "/women", "/hair-loss"].includes(pathname));
 
   return (
     <>
       {!launch.acceptingPatients && (
-        <div className="bg-teal-deep px-5 py-2.5 text-center text-sm text-white">
-          Remade Clinic is preparing to launch and isn&apos;t accepting patients yet.{" "}
-          <Link href="/how-it-works#launch" className="font-medium underline underline-offset-4">
-            Learn more
+        <p className="bg-sky px-5 py-2 text-center text-sm text-sky-deep">
+          We&apos;re preparing to open and aren&apos;t accepting patients yet.{" "}
+          <Link href="/how-it-works#launch" className="font-semibold underline underline-offset-2">
+            What this means
           </Link>
-        </div>
+        </p>
       )}
-      <header
-        className={`sticky top-0 z-50 border-b bg-cream/90 backdrop-blur-md transition-colors ${
-          scrolled || open ? "border-line" : "border-transparent"
-        }`}
-      >
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 md:h-18 md:px-8">
+      <header className="sticky top-0 z-50 border-b border-line bg-paper/95 backdrop-blur">
+        <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
           <Logo />
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
             {mainNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive(item.href) ? "page" : undefined}
-                className={`rounded-full px-3.5 py-2 text-[15px] transition-colors ${
-                  isActive(item.href) ? "bg-mist font-medium text-teal-deep" : "text-muted hover:text-ink"
+                aria-current={active(item.href) ? "page" : undefined}
+                className={`relative rounded-full px-4 py-2.5 font-semibold transition-colors ${
+                  active(item.href) ? "text-teal" : "text-ink hover:text-teal"
                 }`}
               >
                 {item.label}
+                {active(item.href) && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-coral" aria-hidden />}
               </Link>
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <Link
-              href="/portal"
-              className="hidden min-h-11 items-center rounded-full px-3.5 text-[15px] text-muted hover:text-ink sm:inline-flex"
-            >
-              Log in
+            <Link href="/portal" className="hidden min-h-11 items-center px-3 font-semibold text-ink hover:text-teal sm:inline-flex">
+              Member login
             </Link>
             <Link
-              href="/weight-loss"
-              className="hidden min-h-11 items-center rounded-full bg-teal px-5 text-[15px] font-medium text-white transition-colors hover:bg-teal-deep sm:inline-flex"
+              href={primaryCta.href}
+              className="hidden min-h-11 items-center rounded-full bg-teal px-5 font-semibold text-white transition-colors hover:bg-teal-deep md:inline-flex"
             >
-              Explore care
+              {primaryCta.label}
             </Link>
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
-              className="grid h-11 w-11 place-items-center rounded-full text-ink hover:bg-mist lg:hidden"
+              className="grid h-11 w-11 place-items-center rounded-full text-ink hover:bg-shell lg:hidden"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               aria-controls="mobile-menu"
             >
-              <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden>
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden>
                 {open ? (
-                  <path d="M5 5l12 12M17 5L5 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 ) : (
-                  <path d="M3 7h16M3 15h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M4 8h16M4 16h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 )}
               </svg>
             </button>
           </div>
         </div>
         {open && (
-          <nav id="mobile-menu" className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line px-5 pb-8 pt-2 lg:hidden" aria-label="Mobile">
+          <nav
+            id="mobile-menu"
+            className="h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-line bg-paper px-5 pb-10 pt-2 lg:hidden"
+            aria-label="Mobile"
+          >
             <ul>
               {mainNav.map((item) => (
                 <li key={item.href} className="border-b border-line">
-                  <Link href={item.href} onClick={() => setOpen(false)} className="flex min-h-14 items-center text-lg">
+                  <Link href={item.href} onClick={() => setOpen(false)} className="flex min-h-15 items-center font-display text-xl font-bold">
                     {item.label}
                   </Link>
                   {item.href === "/other-care" && (
@@ -121,18 +110,18 @@ export function SiteHeader() {
             </ul>
             <div className="mt-6 grid gap-3">
               <Link
-                href="/weight-loss"
+                href={primaryCta.href}
                 onClick={() => setOpen(false)}
-                className="flex min-h-12 items-center justify-center rounded-full bg-teal font-medium text-white"
+                className="flex min-h-13 items-center justify-center rounded-full bg-teal font-semibold text-white"
               >
-                Explore weight-loss care
+                {primaryCta.label}
               </Link>
               <Link
                 href="/portal"
                 onClick={() => setOpen(false)}
-                className="flex min-h-12 items-center justify-center rounded-full border border-ink/20"
+                className="flex min-h-13 items-center justify-center rounded-full border-2 border-teal font-semibold text-teal"
               >
-                Log in
+                Member login
               </Link>
             </div>
           </nav>

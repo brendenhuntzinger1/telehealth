@@ -1,49 +1,64 @@
 import type { Metadata } from "next";
 import { Faq } from "@/components/faq";
-import { Plans } from "@/components/plans";
-import { ButtonLink, Container, SectionHeading } from "@/components/ui";
-import { disclaimer, faqs } from "@/lib/site";
+import { PricingTable } from "@/components/pricing-table";
+import { Container, Heading, Pill, SectionIntro } from "@/components/ui";
+import { billingRules, faqs } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Remade Clinic plans: medical weight-loss care as the base, with personal coaching as an optional add-on.",
+  description: "Compare medical weight loss, medical care with coaching, and coaching only — with every cost listed separately.",
 };
 
 const pricingFaqs = faqs.filter((f) =>
-  ["How much does medication cost?", "Is coaching required?", "Will I qualify for medication?"].includes(f.q),
+  ["Is medication included?", "How do insurance and self-pay work?", "What happens if I'm not eligible?", "Do I need medication to join coaching?"].includes(f.q),
 );
+
+const TBC = "To be confirmed before we open";
 
 export default function PricingPage() {
   return (
     <>
-      <section className="pb-12 pt-10 md:pb-16 md:pt-16">
+      <section className="pb-12 pt-10 sm:pt-16">
         <Container>
-          <SectionHeading
-            as="h1"
-            eyebrow="Pricing"
-            title="Simple plans, clearly explained"
-            sub="Medical care is the base of every plan. Personal coaching is optional. Medication and any lab work are billed separately."
-          />
+          <Pill tone="sky">Pricing</Pill>
+          <Heading as="h1" className="mt-5 max-w-3xl text-ink">
+            See every cost before you choose.
+          </Heading>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
+            Pick the level of support you want. Membership, medication, lab work and coaching are listed separately so you
+            always know what you&apos;re paying for.
+          </p>
         </Container>
       </section>
-      <section className="pb-16 md:pb-24">
+      <section className="pb-16 sm:pb-24">
         <Container>
-          <Plans />
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/weight-loss">Explore weight-loss care</ButtonLink>
-            <ButtonLink href="/how-it-works" variant="secondary">
-              How it works
-            </ButtonLink>
-          </div>
+          <PricingTable />
         </Container>
       </section>
-      <section className="border-t border-line bg-sand py-16 md:py-24">
+      <section className="bg-shell py-16 sm:py-24">
+        <Container>
+          <SectionIntro eyebrow="Billing details" title="How billing will work" />
+          <dl className="mt-10 grid gap-5 md:grid-cols-2">
+            {[
+              ["Medication", "Billed separately from membership, and only if an authorized clinician prescribes it. The cost depends on the medication, dose and pharmacy."],
+              ["Lab work", "Ordered only if your clinician needs it. Lab costs will be published before we open."],
+              ["When you're charged", billingRules.paymentTiming ?? TBC],
+              ["If you're not eligible", billingRules.ifNotEligible ?? TBC],
+              ["Cancellation", billingRules.cancellation ?? TBC],
+              ["Insurance", billingRules.insurance ?? "Not yet confirmed for any service. Please plan on self-pay for now."],
+            ].map(([k, v]) => (
+              <div key={k} className="rounded-[24px] bg-white p-6 ring-1 ring-line">
+                <dt className="font-display text-lg font-bold">{k}</dt>
+                <dd className={`mt-2 ${v === TBC ? "italic text-muted" : "text-muted"}`}>{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </Container>
+      </section>
+      <section className="py-16 sm:py-24">
         <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-          <SectionHeading eyebrow="Questions" title="About costs" />
+          <SectionIntro eyebrow="Questions" title="About costs" />
           <Faq items={pricingFaqs} />
-        </Container>
-        <Container>
-          <p className="mt-10 text-xs leading-relaxed text-muted">{disclaimer}</p>
         </Container>
       </section>
     </>

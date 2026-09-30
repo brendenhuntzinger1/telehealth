@@ -1,58 +1,48 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Container, SectionHeading, Tag } from "@/components/ui";
+import { Container, Heading, Pill, TextLink } from "@/components/ui";
 import { otherCare } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Other care",
-  description: "Men's health and testosterone care, menopause care, and hair-loss care (coming soon) at Remade Clinic.",
+  description: "Men's health and testosterone, menopause and hair-loss care at Remade Clinic.",
 };
 
 export default function OtherCarePage() {
   return (
     <>
-      <section className="pb-12 pt-10 md:pb-16 md:pt-16">
+      <section className="pb-12 pt-10 sm:pt-16">
         <Container>
-          <SectionHeading
-            as="h1"
-            eyebrow="Other care"
-            title="Care for other parts of your health"
-            sub="Weight loss is our main focus. We also offer care for a few related needs, each led by an authorized clinician."
-          />
+          <Pill tone="sky">Other care</Pill>
+          <Heading as="h1" className="mt-5 max-w-3xl text-ink">
+            More ways we plan to help
+          </Heading>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
+            Medical weight loss is our main focus. We&apos;re also preparing care for a few related needs — each led by a
+            clinician. These services aren&apos;t available yet.
+          </p>
         </Container>
       </section>
-      <section className="pb-16 md:pb-24">
+      <section className="pb-16 sm:pb-24">
         <Container className="grid gap-5 md:grid-cols-3">
           {otherCare.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/${c.slug}`}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-line bg-white transition-colors hover:border-teal"
-            >
-              <div className="relative aspect-[4/3] bg-sand">
+            <Link key={c.slug} href={`/${c.slug}`} className="group overflow-hidden rounded-[28px] bg-white ring-1 ring-line hover:ring-teal">
+              <div className="relative aspect-[4/3] bg-shell">
                 <Image src={c.image} alt={c.imageAlt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
               </div>
-              <div className="flex flex-1 flex-col p-6">
-                <div>{c.status === "coming-soon" ? <Tag tone="peach">Coming soon</Tag> : <Tag>Clinician-led</Tag>}</div>
-                <h2 className="mt-4 text-xl font-semibold">{c.name}</h2>
-                <p className="mt-2 flex-1 leading-relaxed text-muted">{c.summary}</p>
-                <span className="mt-5 font-medium text-teal-deep">
-                  {c.status === "coming-soon" ? "Read more" : "Learn more"} <span aria-hidden>→</span>
-                </span>
+              <div className="p-6">
+                <Pill tone={c.status === "coming-soon" ? "coral" : "teal"}>{c.status === "coming-soon" ? "Coming soon" : "Available"}</Pill>
+                <h2 className="font-display mt-4 text-2xl font-bold group-hover:text-teal">{c.name}</h2>
+                <p className="mt-2 leading-relaxed text-muted">{c.summary}</p>
               </div>
             </Link>
           ))}
         </Container>
         <Container>
-          <div className="mt-10 rounded-3xl bg-mist p-6 md:p-8">
-            <p className="text-lg font-semibold text-teal-deep">Looking for weight-loss care?</p>
-            <p className="mt-2 text-teal-deep/90">
-              Our main service combines clinician-guided treatment with nutrition and movement support.{" "}
-              <Link href="/weight-loss" className="font-medium underline underline-offset-4">
-                Explore weight-loss care
-              </Link>
-            </p>
+          <div className="mt-10 flex flex-col items-start justify-between gap-4 rounded-[28px] bg-sky p-7 sm:flex-row sm:items-center">
+            <p className="font-display text-xl font-bold text-ink">Looking for weight-loss care?</p>
+            <TextLink href="/weight-loss">Explore medical weight loss</TextLink>
           </div>
         </Container>
       </section>

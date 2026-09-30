@@ -7,7 +7,7 @@ import { useState } from "react";
 // sends nothing anywhere. The real assessment must run on the clinical
 // partner's secure intake, not here.
 
-type Goal = "weight-loss" | "men" | "women" | "hair-loss";
+type Goal = "weight-loss" | "coaching" | "men" | "women" | "hair-loss";
 type Answers = {
   goal?: Goal;
   start?: "none" | "some" | "regular";
@@ -16,17 +16,24 @@ type Answers = {
 };
 
 const goals: { value: Goal; label: string; hint: string; soon?: boolean }[] = [
-  { value: "weight-loss", label: "Weight loss", hint: "Clinician-guided care and habit support" },
-  { value: "men", label: "Men's health", hint: "Low energy, low drive, testosterone" },
-  { value: "women", label: "Menopause", hint: "Hot flashes, sleep and other symptoms" },
+  { value: "weight-loss", label: "Medical weight loss", hint: "Clinician-guided care, medication only if appropriate" },
+  { value: "coaching", label: "Coaching without medication", hint: "Exercise, nutrition habits and accountability" },
+  { value: "men", label: "Men's health", hint: "Coming soon", soon: true },
+  { value: "women", label: "Menopause", hint: "Coming soon", soon: true },
   { value: "hair-loss", label: "Hair loss", hint: "Coming soon", soon: true },
 ];
 
-const nextSteps = [
+const medicalSteps = [
   "Secure health-history questions (in the live version)",
   "Review by an authorized clinician",
   "A conversation about your individualized plan",
   "Ongoing support — plus coaching if you choose it",
+];
+const coachingSteps = [
+  "Tell your coach about your routine, equipment and schedule",
+  "Get a plan matched to your experience",
+  "Regular check-ins and plan adjustments",
+  "Progress tracking along the way",
 ];
 
 export function Quiz({ initialProgram }: { initialProgram?: string }) {
@@ -36,8 +43,14 @@ export function Quiz({ initialProgram }: { initialProgram?: string }) {
   const [i, setI] = useState(0);
   const set = (patch: Partial<Answers>) => setA((prev) => ({ ...prev, ...patch }));
 
-  const ids = ["goal", "start", "place", "support", "summary"] as const;
-  const step = ids[i];
+  const ids = (a.goal === "coaching" ? ["goal", "start", "place", "summary"] : ["goal", "start", "place", "support", "summary"]) as readonly (
+    | "goal"
+    | "start"
+    | "place"
+    | "support"
+    | "summary"
+  )[];
+  const step = ids[Math.min(i, ids.length - 1)];
   const canContinue = step === "goal" ? !!a.goal : step === "start" ? !!a.start : step === "place" ? !!a.place : step === "support" ? !!a.support : true;
 
   return (
@@ -124,32 +137,30 @@ export function Quiz({ initialProgram }: { initialProgram?: string }) {
             <div>
               <h1 className="font-display text-balance text-3xl leading-tight md:text-5xl">Here&apos;s what would happen next</h1>
               <p className="mt-4 text-lg text-muted">
-                {a.goal === "weight-loss"
-                  ? "Your plan would focus on medical weight-loss care"
-                  : a.goal === "men"
-                    ? "Your plan would start with a men's health evaluation"
-                    : "Your plan would start with a menopause care consultation"}
-                {a.support === "medical-coaching" ? ", with personal coaching added" : ""}
+                {a.goal === "coaching"
+                  ? "Your plan would focus on personal coaching, without medication"
+                  : "Your plan would focus on medical weight-loss care"}
+                {a.goal !== "coaching" && a.support === "medical-coaching" ? ", with personal coaching added" : ""}
                 {a.place === "home" || a.start === "none" ? " — starting with simple movement you can do at home." : "."}
               </p>
               <ol className="mt-8 space-y-3">
-                {nextSteps.map((s, n) => (
+                {(a.goal === "coaching" ? coachingSteps : medicalSteps).map((s, n) => (
                   <li key={s} className="flex items-center gap-4 rounded-2xl border border-line bg-white px-5 py-4">
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-mist text-sm font-semibold text-teal-deep">{n + 1}</span>
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-teal-soft text-sm font-semibold text-teal-deep">{n + 1}</span>
                     {s}
                   </li>
                 ))}
               </ol>
-              <div className="mt-8 rounded-2xl bg-peach p-5 text-clay">
+              <div className="mt-8 rounded-2xl bg-coral-soft p-5 text-coral-deep">
                 <p className="font-semibold">This is a preview.</p>
                 <p className="mt-1">
                   We&apos;re not accepting patients yet, and nothing you selected was saved. Not everyone qualifies for
-                  medication — an authorized clinician makes that decision.
+                  medication — an authorized clinician makes that decision. Personal coaching is always optional.
                 </p>
               </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href="/weight-loss" className="inline-flex min-h-12 items-center justify-center rounded-full bg-teal px-6 font-medium text-white hover:bg-teal-deep">
-                  Explore weight-loss care
+                <Link href="/#options" className="inline-flex min-h-12 items-center justify-center rounded-full bg-teal px-6 font-semibold text-white hover:bg-teal-deep">
+                  Compare your options
                 </Link>
                 <Link href="/portal" className="inline-flex min-h-12 items-center justify-center rounded-full border border-ink/20 px-6 font-medium hover:border-ink/50">
                   Preview the member portal
@@ -161,7 +172,7 @@ export function Quiz({ initialProgram }: { initialProgram?: string }) {
       </div>
 
       {step !== "summary" && (
-        <div className="fixed inset-x-0 bottom-0 border-t border-line bg-cream/95 px-5 py-4 backdrop-blur md:px-8">
+        <div className="fixed inset-x-0 bottom-0 border-t border-line bg-paper/95 px-5 py-4 backdrop-blur md:px-8">
           <div className="mx-auto flex max-w-2xl items-center justify-between gap-4">
             <button
               type="button"
@@ -217,7 +228,7 @@ function Choice({
       disabled={disabled}
       onClick={onClick}
       className={`flex min-h-16 items-center justify-between gap-4 rounded-2xl border-2 px-5 py-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
-        selected ? "border-teal bg-mist" : "border-line bg-white hover:border-sage"
+        selected ? "border-teal bg-teal-soft" : "border-line bg-white hover:border-sky-mid"
       }`}
     >
       <span>

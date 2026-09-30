@@ -16,7 +16,7 @@ export default async function StartPage(props: PageProps<"/start">) {
   return (
     <div className="flex min-h-dvh flex-col">
       {!launch.assessmentLive && (
-        <div className="bg-peach px-5 py-2.5 text-center text-sm text-clay">
+        <div className="bg-coral-soft px-5 py-2.5 text-center text-sm text-coral-deep">
           <strong>Preview only.</strong> This demo doesn&apos;t ask for health information, and nothing you choose is
           saved or sent.
         </div>
