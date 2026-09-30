@@ -1,8 +1,8 @@
-# Halden — telehealth + coaching site
+# Remade — telehealth + coaching site
 
 A premium site for a telehealth clinic offering medical weight loss (GLP-1), men's and women's hormone care, and **built-in fitness and nutrition coaching**. The positioning is *"Lose the fat. Keep the muscle."*
 
-> "Halden" is a placeholder brand. To rename it, change prices or edit the coach bio, edit `src/lib/site.ts`; the whole site updates from that file.
+> Brand name, prices, coach bio and offer details all live in `src/lib/site.ts`; edit that one file and the whole site updates.
 
 ## Pages
 

@@ -2,15 +2,15 @@
 // whole site updates.
 
 export const brand = {
-  name: "Halden",
-  legalName: "Halden Health, LLC",
+  name: "Remade",
+  legalName: "Remade Health, LLC",
   tagline: "Lose fat. Keep muscle.",
   coach: {
     name: "Coach Brenden",
     title: "Founder & Head Coach",
-    bio: "I built Halden because medication alone doesn't build a body you're proud of. Every member gets a plan designed around their medication, their schedule and their goals — and a coach who actually reads their check-ins.",
+    bio: "I built Remade because medication alone doesn't build a body you're proud of. Every member gets a plan designed around their medication, their schedule and their goals — and a coach who actually reads their check-ins.",
   },
-  supportEmail: "care@halden.health",
+  supportEmail: "care@remade.health",
 };
 
 export type ProgramSlug = "weight-loss" | "men" | "women";
@@ -23,6 +23,8 @@ export const programs: Record<
     short: string;
     headline: string;
     sub: string;
+    image: string;
+    imageAlt: string;
     treatments: { name: string; detail: string; price: string }[];
     outcomes: string[];
   }
@@ -33,6 +35,8 @@ export const programs: Record<
     short: "GLP-1 medication + a training plan built to protect muscle.",
     headline: "Weight loss that keeps the muscle.",
     sub: "Clinician-prescribed GLP-1 treatment paired with strength training, protein-first nutrition and a real coach — so the weight you lose is fat, not muscle.",
+    image: "/img/glp1-pen.webp",
+    imageAlt: "Weekly injection pen and medication vial on a stone surface",
     treatments: [
       {
         name: "Oral GLP-1 pill",
@@ -63,6 +67,8 @@ export const programs: Record<
     short: "Testosterone optimization with labs, a clinician and a coach.",
     headline: "Energy, drive and strength — measured, not guessed.",
     sub: "At-home or local labs, a licensed clinician reviews your results, and your training plan is built around your treatment so you actually see the difference in the gym.",
+    image: "/img/trt.webp",
+    imageAlt: "Medication vial, syringe and lab tube on dark slate",
     treatments: [
       {
         name: "Comprehensive hormone labs",
@@ -93,6 +99,8 @@ export const programs: Record<
     short: "Perimenopause & menopause care with strength-first coaching.",
     headline: "Menopause care that treats the whole you.",
     sub: "Clinicians who specialize in perimenopause and menopause, evidence-based hormone therapy when appropriate, and strength training to protect bone, muscle and metabolism.",
+    image: "/img/hrt.webp",
+    imageAlt: "Topical hormone bottle, patch and pill pack on linen",
     treatments: [
       {
         name: "Menopause consultation",
@@ -118,6 +126,64 @@ export const programs: Record<
     ],
   },
 };
+
+// Treatment catalog shown on the homepage (clinic-style product cards).
+export const catalog = [
+  {
+    name: "GLP-1 injection",
+    tag: "Weight loss",
+    detail: "Weekly semaglutide or tirzepatide pen, FDA-approved.",
+    price: "Medication from $199/mo*",
+    image: "/img/glp1-pen.webp",
+    alt: "Weekly injection pen and vial",
+    href: "/weight-loss",
+  },
+  {
+    name: "GLP-1 pill",
+    tag: "Weight loss",
+    detail: "Once-daily FDA-approved tablet. No needles.",
+    price: "Medication from $149/mo*",
+    image: "/img/glp1-pill.webp",
+    alt: "Prescription pill bottle and tablets",
+    href: "/weight-loss",
+  },
+  {
+    name: "Testosterone therapy",
+    tag: "Men's health",
+    detail: "Lab-guided TRT with ongoing monitoring.",
+    price: "Labs $99 · medication at pharmacy price*",
+    image: "/img/trt.webp",
+    alt: "Testosterone vial and syringe",
+    href: "/men",
+  },
+  {
+    name: "Menopause HRT",
+    tag: "Women's health",
+    detail: "Estradiol, progesterone and non-hormonal options.",
+    price: "Medication at pharmacy price*",
+    image: "/img/hrt.webp",
+    alt: "Hormone cream, patch and pills",
+    href: "/women",
+  },
+  {
+    name: "At-home lab panel",
+    tag: "Diagnostics",
+    detail: "Finger-prick kit, results reviewed by your clinician.",
+    price: "$99 one-time",
+    image: "/img/lab-kit.webp",
+    alt: "At-home blood test kit",
+    href: "/men",
+  },
+  {
+    name: "1:1 coaching",
+    tag: "Included in every plan",
+    detail: "Custom training, nutrition and weekly check-ins.",
+    price: "Membership from $99/mo",
+    image: "/img/coach-session.webp",
+    alt: "Coach guiding a member through a squat",
+    href: "/coaching",
+  },
+];
 
 export type TierId = "essentials" | "coached" | "elite";
 
@@ -175,7 +241,7 @@ export const tiers: {
 
 export const addOns = [
   {
-    name: "12-Week Transformation Challenge",
+    name: "The 12-Week Remade Challenge",
     price: "$149 one-time",
     detail: "Structured 12-week block, weekly photo check-ins and a final review.",
   },

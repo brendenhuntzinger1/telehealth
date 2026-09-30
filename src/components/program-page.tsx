@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Faq } from "@/components/faq";
 import { TierCards } from "@/components/tier-cards";
 import { ButtonLink, Check, Container, Eyebrow, SectionHeading } from "@/components/ui";
@@ -17,10 +18,10 @@ export function ProgramPage({
     <>
       <section className="grain relative -mt-16 overflow-hidden bg-ink pt-16 text-bone">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_60%_at_85%_20%,rgba(212,255,79,0.10),transparent_70%)]" />
-        <Container className="relative pb-20 pt-16 md:pb-28 md:pt-24">
+        <Container className="relative grid items-center gap-12 pb-20 pt-12 md:pb-28 md:pt-20 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="animate-rise max-w-3xl">
             <Eyebrow tone="bone">{p.name}</Eyebrow>
-            <h1 className="font-display mt-6 text-5xl leading-[0.98] md:text-8xl">{p.headline}</h1>
+            <h1 className="font-display mt-6 text-5xl leading-[0.98] md:text-7xl">{p.headline}</h1>
             <p className="mt-7 max-w-2xl text-lg leading-relaxed text-bone/70 md:text-xl">{p.sub}</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <ButtonLink href={`/start?program=${p.slug}`} variant="volt">
@@ -30,6 +31,9 @@ export function ProgramPage({
                 View pricing
               </ButtonLink>
             </div>
+          </div>
+          <div className="animate-rise relative aspect-[4/5] overflow-hidden rounded-[32px] [animation-delay:150ms]">
+            <Image src={p.image} alt={p.imageAlt} fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
           </div>
         </Container>
       </section>

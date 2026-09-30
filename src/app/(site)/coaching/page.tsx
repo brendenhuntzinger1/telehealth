@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ButtonLink, Check, Container, Eyebrow, SectionHeading } from "@/components/ui";
 import { addOns, brand } from "@/lib/site";
 
@@ -52,6 +53,19 @@ export default function CoachingPage() {
           <p className="animate-rise text-lg leading-relaxed text-bone/70 [animation-delay:120ms]">
             {brand.coach.bio}
           </p>
+        </Container>
+        <Container className="relative pb-16 md:pb-24">
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              { src: "/img/coach-session.webp", alt: "Coach guiding a member through a squat" },
+              { src: "/img/woman-training.webp", alt: "Woman training with dumbbells at home" },
+              { src: "/img/man-training.webp", alt: "Man setting up a trap bar deadlift" },
+            ].map((img) => (
+              <div key={img.src} className="relative aspect-[3/2] overflow-hidden rounded-[24px]">
+                <Image src={img.src} alt={img.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
+              </div>
+            ))}
+          </div>
         </Container>
       </section>
 
