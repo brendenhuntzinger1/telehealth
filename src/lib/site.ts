@@ -31,6 +31,9 @@ export const launch = {
   assessmentLive: false, // true only when /start hands off to secure clinical intake
   pricingConfirmed: false,
   memberPortalLive: false,
+  // Secure clinical intake URL (from the clinical partner). When set and
+  // assessmentLive is true, the plan builder hands off here.
+  intakeUrl: null as string | null,
 };
 
 // Billing rules. Unconfirmed → shown as "to be confirmed".
@@ -41,17 +44,38 @@ export const billingRules = {
   insurance: null as string | null, // exactly which services/plans, if any — never say "accepted" until confirmed
 };
 
-export const primaryCta = { label: "Explore your options", href: "/#options" };
-export const assessmentCta = launch.assessmentLive
-  ? { label: "Start your assessment", href: "/start" }
-  : { label: "Preview the assessment", href: "/start" };
+export const primaryCta = { label: "Build my plan", href: "/start" };
+// The plan builder works today (in the browser). The secure medical intake it
+// hands off to is only linked once `launch.assessmentLive` and `intakeUrl` are set.
+export const assessmentCta = { label: "Build my plan", href: "/start" };
+
+// Goals shown in the homepage picker and the first step of the plan builder.
+export type GoalId = "lose-20" | "lose-50" | "lose-50plus" | "recomp" | "trt" | "hair" | "menopause" | "unsure";
+export type Track = "weight" | "trt" | "hair" | "menopause";
+
+export const goals: { id: GoalId; label: string; hint: string; track: Track }[] = [
+  { id: "lose-20", label: "Lose 1–20 lbs", hint: "Build steady habits that last", track: "weight" },
+  { id: "lose-50", label: "Lose 21–50 lbs", hint: "Medical support and a real plan", track: "weight" },
+  { id: "lose-50plus", label: "Lose over 50 lbs", hint: "Clinician-guided, long-term care", track: "weight" },
+  { id: "recomp", label: "Lose fat & build muscle", hint: "Strength-focused plan", track: "weight" },
+  { id: "trt", label: "Boost energy & testosterone", hint: "Lab-based TRT care", track: "trt" },
+  { id: "hair", label: "Treat thinning hair", hint: "Hair-loss treatment options", track: "hair" },
+  { id: "menopause", label: "Manage menopause symptoms", hint: "Hormonal & non-hormonal care", track: "menopause" },
+  { id: "unsure", label: "I'm not sure yet", hint: "We'll help you figure it out", track: "weight" },
+];
 
 export const mainNav = [
   { href: "/weight-loss", label: "Weight Loss" },
-  { href: "/how-it-works", label: "How It Works" },
+  { href: "/men", label: "TRT" },
+  { href: "/hair-loss", label: "Hair Loss" },
+  { href: "/women", label: "Menopause" },
   { href: "/coaching", label: "Coaching" },
-  { href: "/other-care", label: "Other Care" },
   { href: "/pricing", label: "Pricing" },
+];
+
+export const secondaryNav = [
+  { href: "/how-it-works", label: "How It Works" },
+  { href: "/other-care", label: "All treatments" },
 ];
 
 // ─── Treatments ──────────────────────────────────────────────────────────────
@@ -120,69 +144,109 @@ export const treatments: Record<TreatmentSlug, Treatment> = {
   },
   men: {
     slug: "men",
-    name: "Men's health & testosterone",
-    shortName: "Men's health",
-    status: "coming-soon",
-    summary: "Lab-based evaluation for symptoms of low testosterone, with treatment only when appropriate.",
-    headline: "Men's health care is coming soon.",
+    name: "Testosterone (TRT) & men's health",
+    shortName: "TRT",
+    status: "available",
+    summary: "Lab-based care for low energy, low drive and other symptoms of low testosterone.",
+    headline: "Testosterone care, guided by your labs.",
     intro:
-      "We're preparing lab-based care for symptoms like low energy and low drive, with testosterone therapy considered only when labs and history support it. We're not accepting patients or payments for this service yet.",
-    image: "/img/man-coffee.webp",
-    imageAlt: "Man pouring coffee in a bright kitchen",
-    forYou: ["Low energy, low libido or mood changes", "You want answers based on lab work, not guesswork"],
-    care: [
-      { title: "Symptom & history review", body: "Planned: a clinician reviews your symptoms, health history and goals." },
-      { title: "Lab testing", body: "Planned: labs ordered as needed. Lab costs will be published before launch." },
-      { title: "Treatment when appropriate", body: "Planned: testosterone therapy only if labs and history support it." },
-      { title: "Monitoring", body: "Planned: follow-up and repeat labs as your clinician directs." },
+      "Feeling run down, low on drive or not like yourself? An authorized clinician reviews your symptoms and lab results, and testosterone therapy is prescribed only when your labs and health history support it — with ongoing monitoring.",
+    image: "/img/trt-dad.webp",
+    imageAlt: "Man playing catch with his son in a sunny backyard",
+    forYou: [
+      "Low energy, low libido, or changes in mood or focus",
+      "Harder to build or keep strength than it used to be",
+      "You want answers based on lab work, not guesswork",
+      "You'd like ongoing monitoring if you start treatment",
     ],
-    options: [],
+    care: [
+      { title: "Symptom & history review", body: "A clinician reviews your symptoms, health history and goals." },
+      { title: "Lab testing", body: "Labs are ordered to check testosterone and related markers. Lab costs will be published before we open." },
+      { title: "Treatment when appropriate", body: "Testosterone therapy is prescribed only if your labs and history support it." },
+      { title: "Ongoing monitoring", body: "Follow-up visits and repeat labs as your clinician directs." },
+    ],
+    options: [
+      { name: "Testosterone therapy", detail: "Prescribed and monitored by a clinician when labs and symptoms support it." },
+      { name: "Lab monitoring", detail: "Regular labs to keep treatment safe and on track." },
+      { name: "Strength & lifestyle support", detail: "Training, sleep and nutrition habits — with optional personal coaching." },
+    ],
     faqs: [
       {
-        q: "Why isn't this available yet?",
-        a: "Testosterone is a controlled medication with specific state and federal prescribing rules. We'll open this service once our clinical partner, states served and pricing are confirmed.",
+        q: "Will I definitely get testosterone?",
+        a: "No. Treatment is prescribed only when your labs, symptoms and health history support it and it's safe for you.",
+      },
+      {
+        q: "Is testosterone available in my state?",
+        a: "Testosterone is a controlled medication with specific state and federal prescribing rules. We'll confirm availability for your state during intake.",
       },
     ],
   },
   women: {
     slug: "women",
-    name: "Menopause & perimenopause care",
+    name: "Menopause & women's health",
     shortName: "Menopause",
-    status: "coming-soon",
+    status: "available",
     summary: "Care for hot flashes, sleep changes and other symptoms, with hormonal and non-hormonal options.",
-    headline: "Menopause care is coming soon.",
+    headline: "Menopause care, on your terms.",
     intro:
-      "We're preparing care for perimenopause and menopause symptoms, with hormonal and non-hormonal options discussed with a clinician. We're not accepting patients or payments for this service yet.",
+      "Talk with an authorized clinician about perimenopause and menopause symptoms — and your options, including hormone therapy when it's appropriate and non-hormonal approaches when it isn't.",
     image: "/img/woman-tea.webp",
     imageAlt: "Woman relaxing on a sofa with a cup of tea",
-    forYou: ["Hot flashes, night sweats or trouble sleeping", "Mood changes, brain fog or changes in your body"],
-    care: [
-      { title: "Symptom review", body: "Planned: a clinician reviews your symptoms, history and preferences." },
-      { title: "Personalized options", body: "Planned: hormonal and non-hormonal options, only when appropriate." },
-      { title: "Follow-up care", body: "Planned: adjustments over time with your clinician." },
-      { title: "Strength & nutrition resources", body: "Planned: guidance to support bone, muscle and overall health." },
+    forYou: [
+      "Hot flashes, night sweats or trouble sleeping",
+      "Mood changes, brain fog or changes in your body",
+      "Weight changes that feel harder to manage",
+      "You want a clinician who takes your symptoms seriously",
     ],
-    options: [],
-    faqs: [],
+    care: [
+      { title: "Symptom review", body: "A clinician reviews your symptoms, history and preferences." },
+      { title: "Personalized options", body: "Hormonal and non-hormonal options, prescribed only when appropriate." },
+      { title: "Follow-up care", body: "Adjustments over time with your clinician." },
+      { title: "Strength & nutrition support", body: "Guidance to support bone, muscle and overall health." },
+    ],
+    options: [
+      { name: "Hormone therapy", detail: "Such as estradiol and progesterone, when appropriate for you." },
+      { name: "Non-hormonal options", detail: "For people who can't or prefer not to use hormones." },
+      { name: "Weight & strength support", detail: "Pair with medical weight loss or personal coaching if you like." },
+    ],
+    faqs: [
+      {
+        q: "Is hormone therapy right for me?",
+        a: "It depends on your symptoms, health history and preferences. Your clinician will explain the benefits and risks of each option.",
+      },
+    ],
   },
   "hair-loss": {
     slug: "hair-loss",
-    name: "Hair-loss care",
+    name: "Hair loss & thinning",
     shortName: "Hair loss",
-    status: "coming-soon",
-    summary: "Clinician-guided options for thinning hair.",
-    headline: "Hair-loss care is coming soon.",
+    status: "available",
+    summary: "Clinician-guided treatment options for thinning hair and hair loss.",
+    headline: "Treatment for thinning hair.",
     intro:
-      "We're preparing clinician-guided care for thinning hair and hair loss. We're not accepting patients or payments for this service yet.",
-    image: "/img/hair-products.webp",
-    imageAlt: "Unlabeled dropper bottle and tablet bottle",
-    forYou: ["Thinning at the crown or hairline", "You want to understand your options early"],
-    care: [
-      { title: "Clinician review", body: "Planned: a review of your hair-loss pattern and health history." },
-      { title: "Treatment options", body: "Planned: topical and oral options when appropriate." },
+      "Share how your hair has changed and an authorized clinician will recommend options that fit you — including prescription treatments when they're appropriate.",
+    image: "/img/hair-mirror.webp",
+    imageAlt: "Man running a hand through his hair in a bathroom mirror",
+    forYou: [
+      "Thinning at the hairline or crown",
+      "More shedding or a wider part",
+      "You want to understand your options early",
     ],
-    options: [],
-    faqs: [],
+    care: [
+      { title: "Clinician review", body: "A review of your hair-loss pattern, history and goals." },
+      { title: "Personalized options", body: "Topical and oral treatments, prescribed only when appropriate." },
+      { title: "Follow-up", body: "Check-ins to see how treatment is working and adjust as needed." },
+    ],
+    options: [
+      { name: "Topical treatments", detail: "Applied to the scalp. Your clinician explains how and how often to use them." },
+      { name: "Oral prescription options", detail: "Available for some people when appropriate, after a clinician review." },
+    ],
+    faqs: [
+      {
+        q: "How long before I see a difference?",
+        a: "Hair grows slowly, so changes usually take months, and results vary from person to person. Your clinician will explain what to expect for your options.",
+      },
+    ],
   },
 };
 
@@ -259,6 +323,16 @@ export const costs: Record<
     labs: "Not applicable",
     coaching: "Included",
   },
+};
+
+// Cost lines for the other treatments. null → "To be confirmed".
+export const treatmentCosts: Record<
+  Exclude<TreatmentSlug, "weight-loss">,
+  { membership: number | null; billing: string | null; medication: string; labs: string }
+> = {
+  men: { membership: null, billing: null, medication: "Billed separately, if prescribed", labs: "Required — cost to be confirmed" },
+  "hair-loss": { membership: null, billing: null, medication: "Billed separately, if prescribed", labs: "Not usually needed" },
+  women: { membership: null, billing: null, medication: "Billed separately, if prescribed", labs: "If ordered — cost to be confirmed" },
 };
 
 export function formatMembership(id: ProgramId) {

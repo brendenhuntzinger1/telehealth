@@ -2,11 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { CareRoles } from "@/components/care-roles";
 import { Faq } from "@/components/faq";
-import { PricingTable } from "@/components/pricing-table";
+import { PricingTable, TreatmentCosts } from "@/components/pricing-table";
 import { ButtonLink, CheckItem, Container, Heading, Icon, Pill, SectionIntro } from "@/components/ui";
-import { assessmentCta, otherCare, steps, treatments, type Treatment } from "@/lib/site";
+import { otherCare, steps, treatments, type Treatment, type TreatmentSlug } from "@/lib/site";
 
 const careIcons = ["stethoscope", "check", "calendar", "leaf"];
+const goalFor: Record<TreatmentSlug, string | undefined> = { "weight-loss": undefined, men: "trt", "hair-loss": "hair", women: "menopause" };
 
 export function TreatmentPage({ t }: { t: Treatment }) {
   const soon = t.status === "coming-soon";
@@ -35,9 +36,9 @@ export function TreatmentPage({ t }: { t: Treatment }) {
                 </>
               ) : (
                 <>
-                  <ButtonLink href="/#options">Compare your options</ButtonLink>
-                  <ButtonLink href={assessmentCta.href} variant="secondary">
-                    {assessmentCta.label}
+                  <ButtonLink href={`/start${goalFor[t.slug] ? `?goal=${goalFor[t.slug]}` : ""}`}>Build my plan</ButtonLink>
+                  <ButtonLink href="/pricing" variant="secondary">
+                    See pricing
                   </ButtonLink>
                 </>
               )}
@@ -125,9 +126,7 @@ export function TreatmentPage({ t }: { t: Treatment }) {
           <section className="bg-shell py-16 sm:py-24">
             <Container>
               <SectionIntro eyebrow="Costs" title="What you'll pay for" sub="Membership, medication, labs and coaching are each listed separately." />
-              <div className="mt-10">
-                <PricingTable compact />
-              </div>
+              <div className="mt-10">{t.slug === "weight-loss" ? <PricingTable compact /> : <TreatmentCosts slug={t.slug} />}</div>
             </Container>
           </section>
         </>

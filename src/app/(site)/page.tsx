@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { CareRoles } from "@/components/care-roles";
 import { DashboardPreview } from "@/components/dashboard-preview";
+import { GoalPicker } from "@/components/goal-picker";
+import { TreatmentGrid } from "@/components/treatment-grid";
 import { Faq } from "@/components/faq";
 import { PricingTable } from "@/components/pricing-table";
 import { ProgramPaths } from "@/components/program-paths";
@@ -11,48 +13,61 @@ import { billingRules, brand, clinical, coaching, faqs, primaryCta, steps, suppo
 export default function Home() {
   return (
     <>
-      {/* 2. Hero */}
+      {/* 2. Hero with goal picker */}
       <section className="overflow-hidden">
-        <Container className="grid items-center gap-8 pb-14 pt-8 sm:pt-12 lg:min-h-[640px] lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:pb-20">
+        <Container className="grid items-center gap-10 pb-14 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pb-20">
           <div className="animate-fade">
-            <Pill tone="sky">Medical weight loss · Nutrition · Optional coaching</Pill>
+            <Pill tone="sky">Weight loss · GLP-1 · TRT · Hair loss · Menopause</Pill>
             <Heading as="h1" className="mt-5 text-ink">
               Weight-loss care <span className="text-teal">built around you.</span>
             </Heading>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
-              Personalized medical care from an authorized clinician, practical guidance on food and movement, and a
-              personal coach if you want one. Medication is prescribed only when it&apos;s appropriate for you.
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
+              Personalized medical care from an authorized clinician, practical food and movement guidance, and a personal
+              coach if you want one. Medication is prescribed only when it&apos;s appropriate for you.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={primaryCta.href}>{primaryCta.label}</ButtonLink>
-              <ButtonLink href="/how-it-works" variant="secondary">
-                How it works
-              </ButtonLink>
+            <div className="mt-7">
+              <GoalPicker />
             </div>
-            <ul className="mt-8 grid gap-2 text-[15px] text-muted sm:grid-cols-3">
-              <CheckItem>No gym needed</CheckItem>
-              <CheckItem>See costs up front</CheckItem>
-              <CheckItem>Choose your support</CheckItem>
-            </ul>
+            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <TextLink href="/how-it-works">How it works</TextLink>
+              <TextLink href="#treatments">See everything we treat</TextLink>
+            </div>
           </div>
-          <div className="relative">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[36px] bg-shell sm:aspect-[5/4] lg:aspect-[4/5]">
+          <div className="relative hidden lg:block">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[36px] bg-shell">
               <Image
                 src="/img/hero-kitchen.webp"
                 alt="Woman laughing while packing a healthy lunch in her kitchen"
                 fill
                 priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
+                sizes="45vw"
                 className="object-cover"
               />
             </div>
-            <div className="absolute -left-3 bottom-6 hidden w-64 rounded-2xl bg-white p-4 shadow-xl shadow-teal-deep/10 ring-1 ring-line sm:block lg:-left-10">
+            <div className="absolute -left-10 bottom-8 w-64 rounded-2xl bg-white p-4 shadow-xl shadow-teal-deep/10 ring-1 ring-line">
               <p className="flex items-center gap-2 text-sm font-bold text-teal">
                 <Icon name="stethoscope" className="h-4 w-4" /> Clinician-guided
               </p>
               <p className="mt-1 text-sm text-muted">Your plan is built with an authorized clinician — around your life.</p>
             </div>
-            <span className="absolute -right-2 top-8 hidden h-16 w-16 rounded-full bg-coral/90 lg:block" aria-hidden />
+            <span className="absolute -right-2 top-8 h-16 w-16 rounded-full bg-coral/90" aria-hidden />
+          </div>
+        </Container>
+      </section>
+
+      {/* What we treat */}
+      <section id="treatments" className="scroll-mt-24 pb-16 sm:pb-24">
+        <Container>
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <SectionIntro
+              eyebrow="What we treat"
+              title="Care for the things that matter to you"
+              sub="Every treatment is led by an authorized clinician, with nutrition, movement and optional coaching alongside."
+            />
+            <TextLink href="/other-care">All treatments</TextLink>
+          </div>
+          <div className="mt-10">
+            <TreatmentGrid />
           </div>
         </Container>
       </section>

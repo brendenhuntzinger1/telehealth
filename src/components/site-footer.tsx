@@ -6,25 +6,25 @@ const cols = [
   {
     title: "Programs",
     links: [
-      { href: "/weight-loss", label: "Medical weight loss" },
+      { href: "/start", label: "Build my plan" },
       { href: "/coaching", label: "Personal coaching" },
       { href: "/pricing", label: "Pricing" },
       { href: "/how-it-works", label: "How it works" },
     ],
   },
   {
-    title: "Other care",
+    title: "Treatments",
     links: [
-      { href: "/men", label: "Men's health (coming soon)" },
-      { href: "/women", label: "Menopause (coming soon)" },
-      { href: "/hair-loss", label: "Hair loss (coming soon)" },
+      { href: "/weight-loss", label: "Weight loss & GLP-1" },
+      { href: "/men", label: "Testosterone (TRT)" },
+      { href: "/hair-loss", label: "Hair loss" },
+      { href: "/women", label: "Menopause" },
     ],
   },
   {
     title: "Members",
     links: [
       { href: "/portal", label: "Member portal preview" },
-      { href: "/start", label: "Assessment preview" },
       { href: "/legal#terms", label: "Terms" },
       { href: "/legal#privacy", label: "Privacy" },
     ],

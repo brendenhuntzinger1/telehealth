@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { billingRules, coachingOnlyOffered, costs, formatMembership, launch, programs, type ProgramId } from "@/lib/site";
+import { billingRules, coachingOnlyOffered, costs, formatMembership, launch, programs, treatmentCosts, treatments, type ProgramId, type TreatmentSlug } from "@/lib/site";
 import { CheckItem, Pill } from "./ui";
 
 const TBC = "To be confirmed";
 
-function rows(id: ProgramId) {
+export function costRows(id: ProgramId) {
   const c = costs[id];
   const membership = formatMembership(id);
   return [
@@ -41,7 +41,7 @@ export function PricingTable({ compact = false }: { compact?: boolean }) {
             <p className={`mt-2 ${p.highlight ? "text-white/85" : "text-muted"}`}>{p.forWho}</p>
 
             <dl className={`mt-6 divide-y rounded-2xl ${p.highlight ? "divide-white/15 bg-white/10" : "divide-line bg-shell"}`}>
-              {rows(p.id).map((r) => (
+              {costRows(p.id).map((r) => (
                 <div key={r.label} className="flex items-start justify-between gap-4 px-4 py-3">
                   <dt className={`text-sm font-semibold ${p.highlight ? "text-white/85" : "text-muted"}`}>{r.label}</dt>
                   <dd
@@ -81,6 +81,41 @@ export function PricingTable({ compact = false }: { compact?: boolean }) {
           before we open. No payments are being collected yet.
         </p>
       )}
+    </div>
+  );
+}
+
+export function TreatmentCosts({ slug }: { slug?: TreatmentSlug }) {
+  const list = (Object.keys(treatmentCosts) as Exclude<TreatmentSlug, "weight-loss">[]).filter((k) => !slug || k === slug);
+  return (
+    <div className={`grid gap-5 ${list.length > 1 ? "lg:grid-cols-3" : "max-w-xl"}`}>
+      {list.map((k) => {
+        const c = treatmentCosts[k];
+        const rows = [
+          { label: "Membership fee", value: launch.pricingConfirmed && c.membership !== null ? `$${c.membership} / month` : TBC, pending: !(launch.pricingConfirmed && c.membership !== null) },
+          { label: "Billing frequency", value: c.billing ?? TBC, pending: !c.billing },
+          { label: "Medication", value: c.medication },
+          { label: "Lab work", value: c.labs },
+          { label: "Personal coaching", value: "Optional add-on" },
+          { label: "Insurance", value: billingRules.insurance ?? "Not yet confirmed — plan on self-pay", pending: !billingRules.insurance },
+        ];
+        return (
+          <article key={k} className="rounded-[28px] border border-line bg-white p-7">
+            <h3 className="font-display text-2xl font-extrabold">{treatments[k].name}</h3>
+            <dl className="mt-5 divide-y divide-line rounded-2xl bg-shell">
+              {rows.map((r) => (
+                <div key={r.label} className="flex items-start justify-between gap-4 px-4 py-3">
+                  <dt className="text-sm font-semibold text-muted">{r.label}</dt>
+                  <dd className={`text-right text-sm ${r.pending ? "italic text-muted" : "font-semibold"}`}>{r.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <Link href={`/${k}`} className="mt-5 inline-flex min-h-11 items-center font-semibold text-teal hover:underline">
+              Learn more
+            </Link>
+          </article>
+        );
+      })}
     </div>
   );
 }

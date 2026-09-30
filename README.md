@@ -1,6 +1,6 @@
 # Remade Clinic website
 
-The marketing site, assessment preview and member-portal preview for **Remade Clinic**, a medical weight-loss and wellness clinic. Medical weight loss is the primary service. Personal coaching is an optional upgrade, or a standalone no-medication option. Men's health, menopause and hair-loss care are secondary and marked "coming soon".
+The marketing site, assessment preview and member-portal preview for **Remade Clinic**, a medical weight-loss and wellness clinic. Medical weight loss is the primary service. Personal coaching is an optional upgrade, or a standalone no-medication option. Testosterone (TRT), hair-loss and menopause care are offered treatments alongside weight loss.
 
 Brand, launch switches, services, pricing and FAQs all live in **`src/lib/site.ts`**.
 
@@ -10,12 +10,12 @@ Brand, launch switches, services, pricing and FAQs all live in **`src/lib/site.t
 |---|---|
 | `/` | Homepage |
 | `/weight-loss` | Primary treatment page |
-| `/other-care` | Hub for secondary services |
-| `/men`, `/women`, `/hair-loss` | Secondary treatment pages, all marked "coming soon" |
+| `/other-care` | "All treatments" hub |
+| `/men`, `/hair-loss`, `/women` | TRT, hair-loss and menopause treatment pages |
 | `/coaching` | Personal coaching: added to medical care or on its own |
 | `/pricing` | Medical, Medical + coaching and Coaching only, each with its own cost lines |
 | `/how-it-works` | Steps, roles, follow-ups, maintenance, launch status |
-| `/start` | Assessment **preview**. Collects no health info and sends nothing |
+| `/start` | **Plan builder**. Pick a goal (lose 1–20 / 21–50 / 50+ lbs, lose fat & build muscle, TRT, hair, menopause, not sure). Branching questions lead to a personalized, printable plan. Runs entirely in the browser: nothing is saved or sent, and no medical screening is done. `/start?goal=<id>` pre-selects a goal |
 | `/portal` | Member portal **preview** with sample data |
 | `/legal` | Legal placeholders |
 
@@ -33,13 +33,11 @@ Next.js 16, React 19, Tailwind CSS v4 and TypeScript. Vercel Web Analytics recor
 ## Launch switches (`launch` in `src/lib/site.ts`)
 
 - `acceptingPatients: false` shows the "preparing to open" notice.
-- `assessmentLive: false` labels `/start` as a preview.
-  - Set it to `true` only after `/start` hands off to secure clinical intake.
+- `assessmentLive` + `intakeUrl`: when both are set, the plan page shows "Continue to secure intake". Until then it says intake opens at launch.
 - `pricingConfirmed: false` shows "To be confirmed" in every price cell.
   - Fill in `costs` first.
 - `memberPortalLive: false` keeps `/portal` as a sample-data preview.
-- Other care: `treatments.men / women / hair-loss` have `status: "coming-soon"`.
-  - Change a service to `"available"` only once it's confirmed.
+- Treatments: `treatments.*.status` controls "coming soon" labels. The owner has confirmed TRT, hair loss and menopause as offered.
 - `coachingOnlyOffered`: shows or hides the coaching-without-medication option.
 
 ## Launch dependencies (owner must confirm; nothing here is invented on the site)
@@ -57,7 +55,7 @@ Next.js 16, React 19, Tailwind CSS v4 and TypeScript. Vercel Web Analytics recor
 | Insurance (which services and plans, if any) | `billingRules.insurance` | Unconfirmed. The site says "plan on self-pay" |
 | Coaching check-in schedule | `coaching.scheduleConfirmed` | Shown as an example only |
 | Coaching-only offering | `coachingOnlyOffered` | Planned. Confirm before launch |
-| Men's health / TRT, menopause, hair loss | `treatments` | Shown as "coming soon". TRT also needs a DEA/state prescribing plan |
+| TRT, hair loss, menopause | `treatments`, `treatmentCosts` | Shown as offered (owner-confirmed). Clinical partner, prices and lab costs still unconfirmed. TRT needs a DEA/state prescribing plan |
 | Legal documents | `/legal` | Placeholders |
-| Secure intake, patient portal and messaging | `/start`, `/portal` | Previews only. Real versions must run on HIPAA-eligible systems with signed BAAs |
+| Secure intake, patient portal and messaging | `launch.intakeUrl`, `/portal` | The plan builder works in the browser only. Real intake and portal must run on HIPAA-eligible systems with signed BAAs |
 | Photography | `public/img` | AI-generated illustrations (Higgsfield). Captioned site-wide as models. Confirm commercial-use rights, or replace with licensed or original photos |

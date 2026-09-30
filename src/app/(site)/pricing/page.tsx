@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Faq } from "@/components/faq";
-import { PricingTable } from "@/components/pricing-table";
+import { PricingTable, TreatmentCosts } from "@/components/pricing-table";
 import { Container, Heading, Pill, SectionIntro } from "@/components/ui";
 import { billingRules, faqs } from "@/lib/site";
 
@@ -33,6 +33,14 @@ export default function PricingPage() {
       <section className="pb-16 sm:pb-24">
         <Container>
           <PricingTable />
+        </Container>
+      </section>
+      <section className="pb-16 sm:pb-24">
+        <Container>
+          <SectionIntro eyebrow="Other treatments" title="TRT, hair loss & menopause" sub="Each treatment has its own membership. Medication and labs are listed separately, and coaching can be added to any of them." />
+          <div className="mt-10">
+            <TreatmentCosts />
+          </div>
         </Container>
       </section>
       <section className="bg-shell py-16 sm:py-24">
