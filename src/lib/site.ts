@@ -1,288 +1,369 @@
-// Central brand + offer config. Rename the brand or change prices here and the
-// whole site updates.
+// Remade Clinic — central brand, launch-status and offer config.
+//
+// Anything set to `null` below is an UNCONFIRMED business detail. The site hides
+// or softens that content until the owner fills it in. Do not replace a null
+// with a guess — see README "Before launch" for the confirmation checklist.
 
 export const brand = {
-  name: "Remade",
-  legalName: "Remade Health, LLC",
-  tagline: "Lose fat. Keep muscle.",
-  coach: {
-    name: "Coach Brenden",
-    title: "Founder & Head Coach",
-    bio: "I built Remade because medication alone doesn't build a body you're proud of. Every member gets a plan designed around their medication, their schedule and their goals — and a coach who actually reads their check-ins.",
+  name: "Remade Clinic",
+  shortName: "Remade",
+  domain: "remadeclinic.com",
+  // Contracting / legal entity name. Needs owner + counsel confirmation.
+  legalName: null as string | null,
+  // Patient support contact. Needs a real, monitored address before launch.
+  supportEmail: null as string | null,
+  supportPhone: null as string | null,
+  founder: {
+    // Display name and credentials must be confirmed by the owner.
+    name: null as string | null,
+    role: "Founder & Head Coach",
+    note: "I started Remade because weight loss is hard to do alone — and medication works best alongside everyday habits you can actually keep. Whether you're brand new to exercise or getting back into it, you'll have support at your pace.",
   },
-  supportEmail: "care@remade.health",
 };
 
-export type ProgramSlug = "weight-loss" | "men" | "women";
+// Launch switches. Flip these only when the real services are live.
+export const launch = {
+  // Real, secure intake connected to the clinical partner?
+  assessmentLive: false,
+  // Membership and coaching prices confirmed by the owner?
+  pricingConfirmed: false,
+  // Clinic currently accepting patients?
+  acceptingPatients: false,
+};
 
-export const programs: Record<
-  ProgramSlug,
-  {
-    slug: ProgramSlug;
-    name: string;
-    short: string;
-    headline: string;
-    sub: string;
-    image: string;
-    imageAlt: string;
-    treatments: { name: string; detail: string; price: string }[];
-    outcomes: string[];
-  }
-> = {
+export const assessmentCta = launch.assessmentLive
+  ? { label: "Start your assessment", href: "/start" }
+  : { label: "Preview the assessment", href: "/start" };
+
+export type ServiceStatus = "offered" | "coming-soon";
+
+export type TreatmentSlug = "weight-loss" | "men" | "women" | "hair-loss";
+
+export type Treatment = {
+  slug: TreatmentSlug;
+  name: string;
+  navLabel: string;
+  status: ServiceStatus;
+  summary: string;
+  headline: string;
+  intro: string;
+  image: string;
+  imageAlt: string;
+  whoFor: string[];
+  includes: { title: string; body: string }[];
+  options: { name: string; detail: string }[];
+  faqs: { q: string; a: string }[];
+};
+
+export const treatments: Record<TreatmentSlug, Treatment> = {
   "weight-loss": {
     slug: "weight-loss",
-    name: "Medical Weight Loss",
-    short: "GLP-1 medication + a training plan built to protect muscle.",
-    headline: "Weight loss that keeps the muscle.",
-    sub: "Clinician-prescribed GLP-1 treatment paired with strength training, protein-first nutrition and a real coach — so the weight you lose is fat, not muscle.",
-    image: "/img/glp1-pen.webp",
-    imageAlt: "Weekly injection pen and medication vial on a stone surface",
-    treatments: [
+    name: "Medical weight loss",
+    navLabel: "Weight loss",
+    status: "offered",
+    summary: "Clinician-guided care, GLP-1 treatment when appropriate, and everyday habit support.",
+    headline: "Weight-loss care that fits your real life.",
+    intro:
+      "Work with an authorized clinician on a plan made for you — which may include GLP-1 medication when it's appropriate — with practical nutrition and movement support to help you build habits that last.",
+    image: "/img/couple-cooking.webp",
+    imageAlt: "Couple cooking a healthy dinner together",
+    whoFor: [
+      "You've tried to lose weight on your own and want medical support",
+      "You want a plan that works at your fitness level — including none",
+      "You'd like to know whether medication could be right for you",
+      "You want help keeping weight off over the long term",
+    ],
+    includes: [
       {
-        name: "Oral GLP-1 pill",
-        detail: "FDA-approved once-daily tablet. No needles.",
-        price: "from $149/mo*",
+        title: "A medical evaluation",
+        body: "An authorized clinician reviews your health history, current medications and goals.",
       },
       {
-        name: "Semaglutide (Wegovy®)",
-        detail: "FDA-approved weekly injection, filled via manufacturer pharmacy.",
-        price: "from $199/mo*",
+        title: "An individualized plan",
+        body: "Your clinician explains your options. Medication is prescribed only when it's medically appropriate.",
       },
       {
-        name: "Tirzepatide (Zepbound®)",
-        detail: "FDA-approved weekly injection, filled via manufacturer pharmacy.",
-        price: "from $299/mo*",
+        title: "Ongoing clinical follow-up",
+        body: "Check-ins on progress and side effects, with changes made by your clinician as needed.",
+      },
+      {
+        title: "Nutrition & movement resources",
+        body: "Simple guidance on eating well with a smaller appetite, walking, and beginner strength training.",
       },
     ],
-    outcomes: [
-      "Clinician visit & prescription, if appropriate",
-      "Dose-aware training plan (adjusts on low-appetite weeks)",
-      "Protein & macro targets to preserve lean mass",
-      "Maintenance plan for when you taper off",
+    options: [
+      {
+        name: "GLP-1 medication",
+        detail:
+          "Such as semaglutide or tirzepatide — weekly injections or, for some medications, a daily pill. Prescribed only if appropriate for you.",
+      },
+      {
+        name: "Care without medication",
+        detail: "If medication isn't right for you, or you'd prefer not to use it, you can still get clinical guidance and habit support.",
+      },
+      {
+        name: "Maintenance planning",
+        detail: "As you progress, your clinician decides with you whether to continue, adjust or taper treatment.",
+      },
+    ],
+    faqs: [
+      {
+        q: "Will I be prescribed a GLP-1?",
+        a: "Not everyone qualifies. An authorized clinician decides whether medication is appropriate based on your health history, current medications and goals. If it isn't a fit, they'll talk through other options.",
+      },
+      {
+        q: "Do I need to exercise a lot?",
+        a: "No. Many people start with short walks and simple home exercises. The goal is steady, manageable movement — and adding some strength work over time to help support muscle while you lose weight.",
+      },
+      {
+        q: "What if I have side effects?",
+        a: "Contact the clinical team. Questions about medication, side effects or dosing always go to your clinician, not a coach. In an emergency, call 911.",
+      },
     ],
   },
   men: {
     slug: "men",
-    name: "Men's Hormones",
-    short: "Testosterone optimization with labs, a clinician and a coach.",
-    headline: "Energy, drive and strength — measured, not guessed.",
-    sub: "At-home or local labs, a licensed clinician reviews your results, and your training plan is built around your treatment so you actually see the difference in the gym.",
-    image: "/img/trt.webp",
-    imageAlt: "Medication vial, syringe and lab tube on dark slate",
-    treatments: [
+    name: "Men's health & testosterone",
+    navLabel: "Men's health",
+    status: "offered",
+    summary: "Lab-based evaluation for symptoms of low testosterone, with treatment when appropriate.",
+    headline: "Low energy or low drive? Start with the facts.",
+    intro:
+      "An authorized clinician reviews your symptoms and lab results to understand what's going on. Testosterone therapy is considered only when your labs and history support it.",
+    image: "/img/man-coffee.webp",
+    imageAlt: "Man pouring coffee in a bright kitchen",
+    whoFor: [
+      "Low energy, low libido or changes in mood",
+      "You want answers based on lab work, not guesswork",
+      "You'd like clinical monitoring if you start treatment",
+    ],
+    includes: [
+      { title: "Symptom & history review", body: "A clinician looks at your symptoms, health history and goals." },
       {
-        name: "Comprehensive hormone labs",
-        detail: "Total & free T, estradiol, CBC, PSA, lipids and more.",
-        price: "$99 one-time",
+        title: "Lab testing",
+        body: "Labs are ordered as needed. Whether they're included or billed separately will be confirmed before launch.",
       },
+      { title: "Treatment when appropriate", body: "Testosterone therapy is prescribed only if your labs and health history support it." },
+      { title: "Ongoing monitoring", body: "Follow-up visits and repeat labs as directed by your clinician." },
+    ],
+    options: [
       {
         name: "Testosterone therapy",
-        detail: "Prescribed only when labs and symptoms support it.",
-        price: "pharmacy price*",
+        detail: "A controlled medication with specific prescribing and monitoring rules. Availability depends on your state and current regulations.",
+      },
+      { name: "Lifestyle support", detail: "Sleep, activity and nutrition habits that support overall health — with optional coaching." },
+    ],
+    faqs: [
+      {
+        q: "Will I definitely get testosterone?",
+        a: "No. Treatment is only prescribed when your labs, symptoms and health history support it and it's safe for you.",
       },
       {
-        name: "Ongoing monitoring",
-        detail: "Follow-up labs and dose adjustments by your clinician.",
-        price: "included",
+        q: "Is this available in my state?",
+        a: "Testosterone prescribing through telehealth is regulated at the state and federal level. We'll publish where this service is available before launch.",
       },
-    ],
-    outcomes: [
-      "Lab-guided treatment decisions",
-      "Hypertrophy-focused training blocks",
-      "Body-composition tracking",
-      "Recovery, sleep & nutrition coaching",
     ],
   },
   women: {
     slug: "women",
-    name: "Women's Hormones",
-    short: "Perimenopause & menopause care with strength-first coaching.",
-    headline: "Menopause care that treats the whole you.",
-    sub: "Clinicians who specialize in perimenopause and menopause, evidence-based hormone therapy when appropriate, and strength training to protect bone, muscle and metabolism.",
-    image: "/img/hrt.webp",
-    imageAlt: "Topical hormone bottle, patch and pill pack on linen",
-    treatments: [
+    name: "Menopause & perimenopause care",
+    navLabel: "Menopause",
+    status: "offered",
+    summary: "Care for hot flashes, sleep changes and other symptoms, with hormonal and non-hormonal options.",
+    headline: "Support for menopause, on your terms.",
+    intro:
+      "Talk with an authorized clinician about your symptoms and your options — including hormone therapy when it's appropriate, and non-hormonal approaches when it isn't.",
+    image: "/img/woman-tea.webp",
+    imageAlt: "Woman relaxing on a sofa with a cup of tea",
+    whoFor: [
+      "Hot flashes, night sweats or trouble sleeping",
+      "Mood changes, brain fog or changes in your body",
+      "You want a clinician who takes your symptoms seriously",
+    ],
+    includes: [
+      { title: "Symptom review", body: "A clinician reviews your symptoms, history and preferences." },
+      { title: "Personalized options", body: "Hormonal and non-hormonal options, prescribed only when appropriate." },
+      { title: "Follow-up care", body: "Adjustments over time with your clinician." },
+      { title: "Strength & nutrition resources", body: "Practical guidance to support bone, muscle and overall health." },
+    ],
+    options: [
+      { name: "Hormone therapy", detail: "Such as estradiol and progesterone, when appropriate for you." },
+      { name: "Non-hormonal options", detail: "For people who can't or prefer not to use hormones." },
+    ],
+    faqs: [
       {
-        name: "Menopause consultation",
-        detail: "Symptom review and a personalized plan from a clinician.",
-        price: "included",
-      },
-      {
-        name: "Hormone therapy (HRT)",
-        detail: "Estradiol, progesterone and more — prescribed when appropriate.",
-        price: "pharmacy price*",
-      },
-      {
-        name: "Non-hormonal options",
-        detail: "For members who can't or prefer not to use hormones.",
-        price: "pharmacy price*",
+        q: "Is hormone therapy right for me?",
+        a: "It depends on your symptoms, health history and preferences. Your clinician will review everything with you and explain the benefits and risks of each option.",
       },
     ],
-    outcomes: [
-      "Symptom relief plan from a clinician",
-      "Strength training for bone density & muscle",
-      "Protein-forward nutrition for midlife metabolism",
-      "Monthly progress reviews",
+  },
+  "hair-loss": {
+    slug: "hair-loss",
+    name: "Hair-loss care",
+    navLabel: "Hair loss",
+    status: "coming-soon",
+    summary: "Clinician-guided options for thinning hair. Coming soon.",
+    headline: "Hair-loss care is coming soon.",
+    intro:
+      "We're preparing clinician-guided care for thinning hair and hair loss. We're not accepting patients or payments for this service yet.",
+    image: "/img/hair-products.webp",
+    imageAlt: "Unlabeled dropper bottle and tablet bottle",
+    whoFor: ["Thinning at the crown or hairline", "You want to understand your options early"],
+    includes: [
+      { title: "Clinician review", body: "Planned: a review of your hair-loss pattern and health history." },
+      { title: "Treatment options", body: "Planned: topical and oral options when appropriate." },
     ],
+    options: [],
+    faqs: [],
   },
 };
 
-// Treatment catalog shown on the homepage (clinic-style product cards).
-export const catalog = [
+export const primaryTreatment = treatments["weight-loss"];
+export const otherCare = [treatments.men, treatments.women, treatments["hair-loss"]];
+
+// What care includes — keep clinical care, included resources and the optional
+// coaching add-on clearly separated.
+export const careIncludes = [
   {
-    name: "GLP-1 injection",
-    tag: "Weight loss",
-    detail: "Weekly semaglutide or tirzepatide pen, FDA-approved.",
-    price: "Medication from $199/mo*",
-    image: "/img/glp1-pen.webp",
-    alt: "Weekly injection pen and vial",
-    href: "/weight-loss",
+    icon: "stethoscope",
+    title: "Medical evaluation & treatment",
+    body: "An authorized clinician reviews your health history and goals, and directs any treatment.",
+    tag: "Clinical care",
   },
   {
-    name: "GLP-1 pill",
-    tag: "Weight loss",
-    detail: "Once-daily FDA-approved tablet. No needles.",
-    price: "Medication from $149/mo*",
-    image: "/img/glp1-pill.webp",
-    alt: "Prescription pill bottle and tablets",
-    href: "/weight-loss",
+    icon: "calendar",
+    title: "Ongoing clinical follow-up",
+    body: "Check-ins with your clinical team to review progress and side effects and adjust your plan.",
+    tag: "Clinical care",
   },
   {
-    name: "Testosterone therapy",
-    tag: "Men's health",
-    detail: "Lab-guided TRT with ongoing monitoring.",
-    price: "Labs $99 · medication at pharmacy price*",
-    image: "/img/trt.webp",
-    alt: "Testosterone vial and syringe",
-    href: "/men",
+    icon: "leaf",
+    title: "Nutrition & movement resources",
+    body: "Easy-to-follow guidance on meals, walking and beginner strength, available to every member.",
+    tag: "Included resources",
   },
   {
-    name: "Menopause HRT",
-    tag: "Women's health",
-    detail: "Estradiol, progesterone and non-hormonal options.",
-    price: "Medication at pharmacy price*",
-    image: "/img/hrt.webp",
-    alt: "Hormone cream, patch and pills",
-    href: "/women",
+    icon: "person",
+    title: "Personal coaching",
+    body: "One-on-one plans, check-ins and accountability from a coach, if you want extra support.",
+    tag: "Optional add-on",
+  },
+] as const;
+
+export const steps = [
+  { title: "Share your goals and health history", body: "Tell us what you're hoping for and a bit about your health through secure intake." },
+  { title: "Clinician review", body: "Meet with, or receive a review from, an authorized clinician." },
+  { title: "Discuss your plan", body: "Talk through an individualized plan — with or without medication." },
+  { title: "Ongoing support", body: "Follow-ups with your clinical team, plus coaching if you'd like it." },
+];
+
+export const supportPillars = [
+  {
+    icon: "leaf",
+    title: "Nutrition habits",
+    body: "Simple, filling meals with enough protein — especially helpful when your appetite is smaller.",
   },
   {
-    name: "At-home lab panel",
-    tag: "Diagnostics",
-    detail: "Finger-prick kit, results reviewed by your clinician.",
-    price: "$99 one-time",
-    image: "/img/lab-kit.webp",
-    alt: "At-home blood test kit",
-    href: "/men",
+    icon: "walk",
+    title: "Manageable activity",
+    body: "Start with walking. A few more steps each week adds up.",
   },
   {
-    name: "1:1 coaching",
-    tag: "Included in every plan",
-    detail: "Custom training, nutrition and weekly check-ins.",
-    price: "Membership from $99/mo",
-    image: "/img/coach-session.webp",
-    alt: "Coach guiding a member through a squat",
-    href: "/coaching",
+    icon: "strength",
+    title: "Strength, at any level",
+    body: "Chair squats, wall push-ups and bands at home. Strength work can help support muscle as you lose weight.",
+  },
+  {
+    icon: "check",
+    title: "Accountability",
+    body: "Regular check-ins keep you on track — with your clinical team, and with a coach if you choose one.",
+  },
+  {
+    icon: "calendar",
+    title: "Maintenance",
+    body: "Planning for the long term from the start, with decisions about medication made alongside your clinician.",
   },
 ];
 
-export type TierId = "essentials" | "coached" | "elite";
-
-export const tiers: {
-  id: TierId;
-  name: string;
-  price: number;
-  blurb: string;
-  featured?: boolean;
-  features: string[];
-}[] = [
-  {
-    id: "essentials",
-    name: "Essentials",
-    price: 99,
-    blurb: "Clinical care plus a proven plan to follow on your own.",
-    features: [
-      "Licensed clinician visit & prescription, if appropriate",
-      "Unlimited clinician messaging",
-      "Member app: workout library & meal plans",
-      "Weekly weight & measurement tracking",
-      "Medication reminders",
-    ],
-  },
-  {
-    id: "coached",
-    name: "Coached",
-    price: 199,
-    blurb: "A personalized plan and a coach who adjusts it every month.",
-    featured: true,
-    features: [
-      "Everything in Essentials",
-      "Custom training program built around your medication",
-      "Personal macro & protein targets",
-      "Monthly 1:1 video check-in with your coach",
-      "Progress-photo reviews with private side-by-sides",
-      "Members-only community",
-    ],
-  },
-  {
-    id: "elite",
-    name: "Elite 1:1",
-    price: 399,
-    blurb: "Hands-on coaching for people who want the fastest, cleanest result.",
-    features: [
-      "Everything in Coached",
-      "Weekly 1:1 video check-ins",
-      "Exercise form reviews (send a video, get feedback)",
-      "Quarterly lab panel",
-      "Priority messaging — replies same day",
-      "Custom maintenance program when you taper off medication",
-    ],
-  },
+export const coachingFeatures = [
+  { title: "Home or gym plans", body: "Workouts built around the space and equipment you have — even none." },
+  { title: "Beginner-friendly progression", body: "Start where you are, from short walks to simple strength moves." },
+  { title: "Nutrition & habit support", body: "Practical, everyday eating habits, within your coach's qualifications." },
+  { title: "Check-ins & accountability", body: "Regular check-ins so you're not doing this alone." },
+  { title: "Progress tracking", body: "Track how you feel, how you move and how your habits are going." },
+  { title: "Plan adjustments", body: "Your plan changes as your routine, energy and goals change." },
 ];
 
-export const addOns = [
-  {
-    name: "The 12-Week Remade Challenge",
-    price: "$149 one-time",
-    detail: "Structured 12-week block, weekly photo check-ins and a final review.",
+// Pricing: medical care is the base; coaching is an optional add-on.
+// Prices stay null until confirmed by the owner. (Earlier drafts used $99 / $199 / $399
+// membership tiers — unconfirmed, so they are not shown.)
+export const plans = {
+  medical: {
+    name: "Medical weight-loss care",
+    price: null as number | null,
+    period: "month",
+    description: "Clinician-guided care — the base of every plan.",
+    includes: [
+      "Medical evaluation by an authorized clinician",
+      "Individualized treatment plan",
+      "Ongoing clinical follow-up",
+      "Nutrition & movement resources",
+      "Member portal",
+    ],
   },
-  {
-    name: "Maintenance Membership",
-    price: "$49/mo",
-    detail: "For members tapering off medication: training, nutrition and monthly check-ins to keep the results.",
+  coaching: {
+    name: "Personal coaching",
+    price: null as number | null,
+    period: "month",
+    description: "An optional add-on for one-on-one support and accountability.",
+    includes: [
+      "Personalized home or gym plan",
+      "Beginner-friendly progression",
+      "Nutrition & habit coaching",
+      "Regular check-ins",
+      "Progress tracking & plan adjustments",
+    ],
   },
-  {
-    name: "Meal-Prep Playbook",
-    price: "$29 one-time",
-    detail: "High-protein recipes and grocery lists designed for reduced appetite.",
-  },
-];
+  billedSeparately: [
+    { item: "Medication", note: "Billed separately. Cost depends on the medication, dose, pharmacy and any insurance coverage." },
+    { item: "Lab work", note: "If ordered by your clinician. Whether labs are included will be confirmed before launch." },
+  ],
+};
 
 export const faqs = [
   {
-    q: "Is the medication included in the membership price?",
-    a: "No. Your membership covers clinical care and coaching. Medication is billed separately at the pharmacy's price — for FDA-approved GLP-1s that's typically the manufacturer's self-pay price. If you have insurance coverage, we'll help you check it.",
+    q: "How much does medication cost?",
+    a: "Medication is billed separately from membership. The cost depends on the medication, the dose, the pharmacy and any insurance coverage you have. Your clinician will talk through options and costs with you before anything is prescribed.",
   },
   {
-    q: "Do I have to get a prescription to join coaching?",
-    a: "No. Every tier includes a clinician visit, but if you're not a candidate for medication — or don't want it — you can still join for the training, nutrition and coaching.",
+    q: "Will I qualify for medication?",
+    a: "Not everyone does. An authorized clinician reviews your health history, current medications and goals to decide whether medication is appropriate. If it isn't, they can discuss other options with you.",
   },
   {
-    q: "Who prescribes my medication?",
-    a: "A licensed clinician in your state, through our clinical partner. Your coach never makes medical or dosing decisions — those stay with your clinician.",
+    q: "Is coaching required?",
+    a: "No. Coaching is an optional add-on. Every member gets clinical care and general nutrition and movement resources. Coaching adds one-on-one plans, check-ins and accountability.",
   },
   {
-    q: "Why does muscle matter on GLP-1s?",
-    a: "Rapid weight loss can include a meaningful amount of lean mass. Resistance training and adequate protein help preserve muscle, which supports strength, metabolism and how you look and feel at your goal weight.",
+    q: "I'm a beginner and don't like gyms. Is this for me?",
+    a: "Yes. You don't need a gym or any fitness experience. Many people start with walking and simple home exercises, then build up gradually.",
   },
   {
-    q: "What happens when I stop medication?",
-    a: "You'll move into a maintenance plan built by your coach: progressive training, nutrition habits and regular check-ins designed to help you hold your results.",
+    q: "What do follow-ups look like?",
+    a: "Your clinical team checks in on your progress, side effects and plan. How often depends on your treatment and is set by your clinician.",
   },
   {
-    q: "Are my progress photos private?",
-    a: "Yes. Photos are visible only to you and your care team. We never use a member's photos or story in marketing without separate written permission.",
+    q: "What happens when I reach my goal?",
+    a: "Maintenance is individual. Any decision to continue, adjust or stop medication is made with your treating clinician. We focus on habits — eating, movement and strength — that can help you maintain your progress over time.",
+  },
+  {
+    q: "Who do I talk to about side effects?",
+    a: "Your clinical team. Coaches help with habits, movement and accountability, but questions about medication, dosing, side effects or other medical concerns always go to your clinician. In an emergency, call 911.",
+  },
+  {
+    q: "Where is Remade Clinic available?",
+    a: "We'll publish the states we serve before we begin accepting patients.",
   },
 ];
 
 export const disclaimer =
-  "*Medication prices are set by the dispensing pharmacy and may change; shown prices are typical self-pay prices and are not included in membership. Prescriptions are issued only if a licensed clinician determines treatment is medically appropriate. Individual results vary. Wegovy® and Zepbound® are registered trademarks of their respective owners; we are not affiliated with or endorsed by them. Coaching is not medical care.";
+  "Prescription treatment is provided only when an authorized clinician determines it is medically appropriate. Not everyone qualifies. Individual results vary. Medication and any lab work are billed separately unless stated otherwise. Coaching is not medical care. Photos show models for illustration only — not our patients, clinicians or coaches.";

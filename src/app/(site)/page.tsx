@@ -1,336 +1,184 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Faq } from "@/components/faq";
-import { PhoneMockup } from "@/components/phone-mockup";
-import { TierCards } from "@/components/tier-cards";
-import { ButtonLink, Check, Container, Eyebrow, SectionHeading } from "@/components/ui";
-import { brand, catalog } from "@/lib/site";
+import { Plans } from "@/components/plans";
+import { ButtonLink, Container, IconBadge, SectionHeading, Tag } from "@/components/ui";
+import {
+  assessmentCta,
+  brand,
+  careIncludes,
+  coachingFeatures,
+  faqs,
+  otherCare,
+  steps,
+  supportPillars,
+} from "@/lib/site";
 
-const trust = [
-  "Licensed clinicians in your state",
-  "FDA-approved medications",
-  "No charge if you're not eligible",
-  "Same membership price at every dose",
-  "Cancel anytime",
-];
-
-const categories = [
-  { label: "Weight loss", sub: "GLP-1 injections & pills", href: "/weight-loss", image: "/img/glp1-pen.webp" },
-  { label: "Testosterone", sub: "Labs, TRT & monitoring", href: "/men", image: "/img/trt.webp" },
-  { label: "Menopause", sub: "HRT & symptom relief", href: "/women", image: "/img/hrt.webp" },
-  { label: "Coaching", sub: "Training & nutrition", href: "/coaching", image: "/img/coach-session.webp" },
-];
-
-const careTeam = [
+const commitments = [
   {
-    role: "Your clinician",
-    title: "Licensed, board-certified providers",
-    body: "Reviews your history and labs, prescribes when appropriate, adjusts your dose and answers every medical question.",
-    image: "/img/telehealth-call.webp",
-    alt: "Member on a video visit with a clinician",
+    icon: "stethoscope",
+    title: "Clinician-directed",
+    body: "Treatment decisions are made by an authorized clinician. Medication is prescribed only when it's appropriate.",
   },
   {
-    role: "Your coach",
-    title: `${brand.coach.name} & team`,
-    body: "Writes your training and nutrition around your medication, reviews your check-ins and progress photos, and adjusts your plan every week.",
-    image: "/img/coach-desk.webp",
-    alt: "Coach reviewing a member's training plan",
+    icon: "receipt",
+    title: "Clear about costs",
+    body: "We'll show what membership includes and what's billed separately — like medication and labs — before you sign up.",
   },
   {
-    role: "Your plan",
-    title: "Built around your life",
-    body: "Home or gym, 2 or 6 days a week, big appetite or none. Your program fits your schedule — not the other way around.",
-    image: "/img/woman-training.webp",
-    alt: "Woman performing a dumbbell Romanian deadlift at home",
+    icon: "shield",
+    title: "Careful with your information",
+    body: "This website doesn't collect health information. Health details will only be gathered through secure intake once care launches.",
+  },
+  {
+    icon: "heart",
+    title: "At your pace",
+    body: "No gym required and no judgment. Start with where you are today.",
   },
 ];
 
-const steps = [
-  { n: "01", title: "3-minute assessment", body: "Tell us your goals, health history and how you like to train. No commitment." },
-  {
-    n: "02",
-    title: "Clinician review",
-    body: "A licensed clinician reviews your intake and prescribes if treatment is right for you — usually within 1–2 days.",
-  },
-  { n: "03", title: "Your kit arrives", body: "Medication ships from a licensed pharmacy. Your coach delivers your first program the same week." },
-  { n: "04", title: "Check in. Adjust. Repeat.", body: "Weekly check-ins, progress photos and plan updates — so results keep coming." },
-];
-
-const compare = [
-  ["Clinician visit & prescription", true, true],
-  ["Medication delivered", true, true],
-  ["Custom strength program", false, true],
-  ["Protein & macro targets", false, true],
-  ["Named coach who knows you", false, true],
-  ["Lean-mass & strength tracking", false, true],
-  ["Plan for coming off medication", false, true],
-] as const;
+const homeFaqs = faqs.filter((f) =>
+  [
+    "How much does medication cost?",
+    "Will I qualify for medication?",
+    "Is coaching required?",
+    "I'm a beginner and don't like gyms. Is this for me?",
+    "What do follow-ups look like?",
+    "What happens when I reach my goal?",
+  ].includes(f.q),
+);
 
 export default function Home() {
   return (
     <>
-      {/* Hero */}
-      <section className="grain relative -mt-16 overflow-hidden bg-ink pt-16 text-bone">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_75%_30%,rgba(212,255,79,0.10),transparent_70%)]" />
-        <Container className="relative grid items-center gap-12 pb-16 pt-12 md:pb-24 md:pt-16 lg:grid-cols-[1.1fr_1fr]">
-          <div className="animate-rise">
-            <Eyebrow tone="bone">Weight loss · Hormones · Personal coaching</Eyebrow>
-            <h1 className="font-display mt-6 text-[56px] leading-[0.95] sm:text-7xl md:text-[92px]">
-              Lose the fat.
-              <br />
-              <em className="text-volt">Keep the muscle.</em>
+      {/* 1. Hero */}
+      <section className="pb-16 pt-8 md:pb-24 md:pt-16">
+        <Container className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div className="animate-fade">
+            <Tag>Medical weight-loss care</Tag>
+            <h1 className="font-display mt-5 text-balance text-[40px] leading-[1.08] text-ink md:text-6xl">
+              Personalized weight-loss care, with support that lasts.
             </h1>
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-bone/70 md:text-xl">
-              A virtual clinic for GLP-1 and hormone treatment — with a personal coach who writes your training and
-              nutrition. Clinical care and coaching, together in one plan.
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
+              Work with an authorized clinician on a plan made for you — including GLP-1 medication when it&apos;s
+              appropriate. Practical nutrition and movement support, plus optional personal coaching, help you build
+              habits you can keep.
             </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/start" variant="volt">
-                See if you qualify — 3 min
-              </ButtonLink>
-              <ButtonLink href="#treatments" variant="ghost-bone">
-                Browse treatments
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href="/weight-loss">Explore weight-loss care</ButtonLink>
+              <ButtonLink href="/how-it-works" variant="secondary">
+                How it works
               </ButtonLink>
             </div>
-            <ul className="mt-10 grid max-w-lg gap-2.5 text-sm text-bone/70 sm:grid-cols-2">
-              {trust.slice(0, 4).map((t) => (
-                <li key={t} className="flex items-center gap-2.5">
-                  <Check className="text-volt" />
-                  {t}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-6 text-sm text-muted">No gym or fitness experience needed.</p>
           </div>
-          <div className="animate-rise relative [animation-delay:150ms]">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[32px]">
+          <div className="relative">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[32px] bg-sand sm:aspect-[4/5]">
               <Image
-                src="/img/coach-session.webp"
-                alt="Coach guiding a member through a kettlebell squat"
+                src="/img/walk-morning.webp"
+                alt="Woman walking on a tree-lined street in the morning"
                 fill
                 priority
                 sizes="(min-width: 1024px) 45vw, 100vw"
-                className="object-cover object-[60%_center]"
+                className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-6 -left-4 w-56 rounded-2xl bg-bone p-4 text-ink shadow-2xl shadow-black/40 sm:-left-8 sm:w-64">
-              <p className="text-[11px] uppercase tracking-wider text-ink/50">This week</p>
-              <p className="mt-1 font-semibold">Lower A · 45 min</p>
-              <div className="mt-3 flex gap-1">
-                {[1, 1, 1, 0, 0].map((d, i) => (
-                  <span key={i} className={`h-1.5 flex-1 rounded-full ${d ? "bg-ink" : "bg-ink/10"}`} />
-                ))}
-              </div>
-              <p className="mt-3 text-xs text-ink/55">Protein 98 / 140g · Next dose Sunday</p>
-            </div>
-            <div className="absolute -right-2 top-6 hidden rounded-full bg-volt px-4 py-2 text-sm font-semibold text-ink shadow-xl sm:block">
-              Lean mass: held ✓
+            <div className="absolute -bottom-5 left-4 right-4 rounded-2xl bg-white/95 p-4 shadow-lg shadow-ink/5 ring-1 ring-line sm:left-auto sm:right-6 sm:w-72">
+              <p className="text-sm font-semibold">Care that goes beyond a prescription</p>
+              <p className="mt-1 text-sm text-muted">Clinical follow-up, everyday habit support and optional coaching.</p>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* Trust marquee */}
-      <div className="overflow-hidden border-b border-line bg-bone-2/60 py-4">
-        <div className="flex w-max animate-marquee gap-12 whitespace-nowrap text-sm text-ink/60">
-          {[...trust, ...trust, ...trust, ...trust].map((t, i) => (
-            <span key={i} className="flex items-center gap-12">
-              {t}
-              <span className="h-1 w-1 rounded-full bg-ink/30" />
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* What can we help with */}
-      <section className="py-20 md:py-28">
+      {/* 2. What your care includes */}
+      <section className="border-t border-line bg-white/60 py-16 md:py-24">
         <Container>
-          <SectionHeading eyebrow="Start here" title="What can we help with?" />
-          <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
-            {categories.map((c) => (
-              <Link
-                key={c.label}
-                href={c.href}
-                className="group relative aspect-[3/4] overflow-hidden rounded-[24px] bg-ink-3"
+          <SectionHeading
+            eyebrow="What your care includes"
+            title="Medical care first. Extra support when you want it."
+            sub="Every member gets clinical care and everyday resources. Personal coaching is an optional add-on."
+          />
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {careIncludes.map((c) => (
+              <div
+                key={c.title}
+                className={`flex flex-col rounded-3xl p-5 md:p-6 ${
+                  c.tag === "Optional add-on" ? "border-2 border-dashed border-sage bg-cream" : "border border-line bg-cream"
+                }`}
               >
-                <Image
-                  src={c.image}
-                  alt=""
-                  fill
-                  sizes="(min-width: 768px) 25vw, 50vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4 text-bone md:p-6">
-                  <p className="text-lg font-semibold md:text-2xl">{c.label}</p>
-                  <p className="mt-1 text-xs text-bone/70 md:text-sm">{c.sub}</p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-volt md:text-sm">
-                    Get started <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </span>
+                <div className="flex items-center gap-4 lg:block">
+                  <IconBadge name={c.icon} />
+                  <h3 className="text-lg font-semibold lg:mt-5">{c.title}</h3>
                 </div>
-              </Link>
+                <p className="mt-3 flex-1 leading-relaxed text-muted">{c.body}</p>
+                <div className="mt-4">
+                  <Tag tone={c.tag === "Optional add-on" ? "peach" : c.tag === "Clinical care" ? "mist" : "line"}>{c.tag}</Tag>
+                </div>
+              </div>
             ))}
           </div>
         </Container>
       </section>
 
-      {/* Treatment catalog */}
-      <section id="treatments" className="scroll-mt-20 border-t border-line bg-bone-2/50 py-20 md:py-28">
+      {/* 3. How it works */}
+      <section className="py-16 md:py-24">
         <Container>
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeading
-              eyebrow="Treatments"
-              title="Prescribed by clinicians. Paired with a coach."
-              sub="Every treatment comes with the member portal and a plan built around it. Medication is prescribed only when a licensed clinician determines it's right for you."
-            />
+            <SectionHeading eyebrow="How it works" title="Getting started is simple" />
+            <Link href="/how-it-works" className="inline-flex min-h-11 items-center font-medium text-teal-deep underline underline-offset-4">
+              See the details
+            </Link>
           </div>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {catalog.map((t) => (
-              <Link
-                key={t.name}
-                href={t.href}
-                className="group flex flex-col overflow-hidden rounded-[24px] border border-line bg-bone transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden bg-bone-2">
-                  <Image
-                    src={t.image}
-                    alt={t.alt}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <span className="absolute left-4 top-4 rounded-full bg-bone/90 px-3 py-1 text-xs font-medium backdrop-blur">
-                    {t.tag}
-                  </span>
+          <ol className="mt-10 grid gap-4 md:grid-cols-4">
+            {steps.map((s, i) => (
+              <li key={s.title} className="flex gap-4 rounded-3xl border border-line bg-white p-5 md:block md:p-6">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-teal font-semibold text-white">{i + 1}</span>
+                <div>
+                  <h3 className="text-lg font-semibold md:mt-5">{s.title}</h3>
+                  <p className="mt-1 leading-relaxed text-muted md:mt-2">{s.body}</p>
                 </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="text-xl font-semibold tracking-tight">{t.name}</h3>
-                  <p className="mt-2 flex-1 text-ink/60">{t.detail}</p>
-                  <div className="mt-5 flex items-center justify-between gap-3">
-                    <span className="font-mono text-xs text-clay">{t.price}</span>
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-bone transition-transform group-hover:translate-x-1">
-                      →
-                    </span>
-                  </div>
-                </div>
-              </Link>
+              </li>
             ))}
-          </div>
-          <p className="mt-8 text-[11px] leading-relaxed text-ink/45">
-            *Medication billed separately at pharmacy price and prescribed only if appropriate. Product images are
-            illustrative and do not depict a specific branded medication.
-          </p>
+          </ol>
+          <p className="mt-6 text-sm text-muted">Not everyone qualifies for medication. Your clinician will talk through what&apos;s right for you.</p>
         </Container>
       </section>
 
-      {/* Care team */}
-      <section className="py-20 md:py-28">
-        <Container>
-          <SectionHeading
-            eyebrow="Your care team"
-            title={
-              <>
-                A clinic <em>and</em> a coach — working as one.
-              </>
-            }
-            sub="Most telehealth stops at the prescription. Here, your clinician and your coach share one plan, so your medication, training and nutrition all move in the same direction."
-          />
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {careTeam.map((m) => (
-              <article key={m.role} className="overflow-hidden rounded-[24px] border border-line bg-white/60">
-                <div className="relative aspect-[3/2]">
-                  <Image src={m.image} alt={m.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
-                </div>
-                <div className="p-6">
-                  <p className="text-xs uppercase tracking-[0.18em] text-clay">{m.role}</p>
-                  <h3 className="mt-2 text-xl font-semibold">{m.title}</h3>
-                  <p className="mt-2 leading-relaxed text-ink/60">{m.body}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* The problem */}
-      <section className="border-t border-line py-20 md:py-28">
-        <Container className="grid items-center gap-14 lg:grid-cols-2">
-          <SectionHeading
-            eyebrow="Why coaching matters"
-            title={
-              <>
-                Not all weight lost is <em>fat.</em>
-              </>
-            }
-            sub="In clinical trial body-composition studies, a substantial share of the weight lost on GLP-1 medication came from lean mass — muscle that powers your metabolism, strength and shape. Most programs only count pounds. We build a plan to protect what matters."
-          />
-          <div className="rounded-[28px] border border-line bg-white/70 p-7 md:p-10">
-            <p className="text-sm font-medium text-ink/60">What your weight loss is made of</p>
-            <div className="mt-8 space-y-7">
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span>Medication alone</span>
-                  <span className="text-ink/50">illustrative</span>
-                </div>
-                <div className="mt-2.5 flex h-4 overflow-hidden rounded-full bg-bone-2">
-                  <div className="w-[62%] bg-ink" />
-                  <div className="w-[38%] bg-clay" />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span>Medication + strength training + protein</span>
-                  <span className="text-ink/50">our goal</span>
-                </div>
-                <div className="mt-2.5 flex h-4 overflow-hidden rounded-full bg-bone-2">
-                  <div className="w-[85%] bg-ink" />
-                  <div className="w-[15%] bg-clay" />
-                </div>
-              </div>
-            </div>
-            <div className="mt-7 flex gap-6 text-xs text-ink/60">
-              <span className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-ink" /> Fat
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-clay" /> Lean mass
-              </span>
-            </div>
-            <p className="mt-6 text-[11px] leading-relaxed text-ink/45">
-              Illustration only, not a promise of results. Lean-mass share varies by person, medication and study.
-              Resistance training and adequate protein are recommended to help preserve muscle during weight loss.
-            </p>
-          </div>
-        </Container>
-      </section>
-
-      {/* The kit */}
-      <section className="grain relative overflow-hidden bg-ink py-20 text-bone md:py-28">
+      {/* 4. Support beyond medication */}
+      <section className="border-t border-line bg-sand py-16 md:py-24">
         <Container className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[28px]">
-            <Image
-              src="/img/kit.webp"
-              alt="Remade welcome kit with injection pen, alcohol swabs, shaker bottle and welcome card"
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="relative col-span-2 aspect-[3/2] overflow-hidden rounded-[28px]">
+              <Image
+                src="/img/couple-cooking.webp"
+                alt="Couple cooking a healthy dinner together"
+                fill
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="relative aspect-square overflow-hidden rounded-[28px]">
+              <Image src="/img/band-row.webp" alt="Woman doing a seated resistance band exercise at home" fill sizes="(min-width: 1024px) 22vw, 50vw" className="object-cover" />
+            </div>
+            <div className="relative aspect-square overflow-hidden rounded-[28px]">
+              <Image src="/img/friends-walk.webp" alt="Two friends walking in a park" fill sizes="(min-width: 1024px) 22vw, 50vw" className="object-cover" />
+            </div>
           </div>
           <div>
             <SectionHeading
-              tone="bone"
-              eyebrow="Delivered to your door"
-              title={
-                <>
-                  Everything arrives <em className="text-volt">in one box.</em>
-                </>
-              }
-              sub="Your medication ships discreetly from a licensed pharmacy. Your welcome kit includes the essentials to start strong — and your coach's first program lands in your portal the same week."
+              eyebrow="Support beyond medication"
+              title="Small, steady habits make the difference."
+              sub="Medication can help, but everyday habits matter too. Our resources are made for real life — including if you're starting from zero."
             />
-            <ul className="mt-8 grid gap-3 text-bone/80 sm:grid-cols-2">
-              {["Prescribed medication", "Supplies & instructions", "Protein shaker", "Your personalized program"].map((t) => (
-                <li key={t} className="flex items-center gap-3">
-                  <Check className="text-volt" />
-                  {t}
+            <ul className="mt-8 space-y-5">
+              {supportPillars.map((p) => (
+                <li key={p.title} className="flex gap-4">
+                  <IconBadge name={p.icon} />
+                  <div>
+                    <h3 className="font-semibold">{p.title}</h3>
+                    <p className="mt-1 leading-relaxed text-muted">{p.body}</p>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -338,161 +186,149 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Personalized coaching */}
-      <section className="py-20 md:py-28">
-        <Container>
-          <div className="grid items-center gap-14 lg:grid-cols-[1fr_auto]">
+      {/* 5. Optional coaching */}
+      <section className="py-16 md:py-24">
+        <Container className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <Tag tone="peach">Optional add-on</Tag>
             <SectionHeading
-              eyebrow="Personalized coaching"
-              title={
-                <>
-                  A real coach in your pocket. <em>Not a chatbot.</em>
-                </>
-              }
-              sub="Your portal holds your workouts, meal plan, progress photos and check-ins — and a direct line to your coach, who adjusts everything as your body and medication change."
+              title="Want a coach in your corner?"
+              sub="Add personal coaching for a plan built around you and someone checking in along the way."
+            />
+            <ul className="mt-8 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+              {coachingFeatures.map((f) => (
+                <li key={f.title}>
+                  <p className="font-semibold">{f.title}</p>
+                  <p className="mt-1 text-muted">{f.body}</p>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 rounded-2xl bg-mist p-5 text-[15px] leading-relaxed text-teal-deep">
+              <strong>Coaching isn&apos;t medical care.</strong> Questions about medication, side effects, dosing or other
+              medical concerns always go to your clinical team.
+            </div>
+            <div className="mt-8">
+              <ButtonLink href="/coaching" variant="secondary">
+                Learn about coaching
+              </ButtonLink>
+            </div>
+          </div>
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[32px] bg-sand lg:aspect-[4/5]">
+            <Image
+              src="/img/home-chair-squat.webp"
+              alt="Man doing a chair squat exercise in his living room"
+              fill
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="object-cover"
             />
           </div>
-          <div className="mt-12 grid gap-5 lg:grid-cols-[1.2fr_1fr_0.9fr]">
-            <div className="relative min-h-[320px] overflow-hidden rounded-[28px]">
-              <Image src="/img/man-training.webp" alt="Man setting up a trap bar deadlift" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/90 to-transparent p-6 text-bone">
-                <p className="text-lg font-semibold">Dose-aware training</p>
-                <p className="mt-1 text-sm text-bone/70">Lighter weeks when appetite dips. Progressive overload when you&apos;re fueled.</p>
-              </div>
-            </div>
-            <div className="relative min-h-[320px] overflow-hidden rounded-[28px]">
-              <Image src="/img/meal-prep.webp" alt="High-protein meal-prep containers" fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/90 to-transparent p-6 text-bone">
-                <p className="text-lg font-semibold">Protein-first meals</p>
-                <p className="mt-1 text-sm text-bone/70">Easy to finish on a small appetite. Built around your daily protein target.</p>
-              </div>
-            </div>
-            <div className="flex items-center justify-center rounded-[28px] bg-ink py-10">
-              <PhoneMockup />
-            </div>
-          </div>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/coaching">How coaching works</ButtonLink>
-            <ButtonLink href="/portal" variant="ghost">
-              Preview the member portal
-            </ButtonLink>
-          </div>
         </Container>
       </section>
 
-      {/* Coach */}
-      <section className="border-t border-line bg-bone-2/50 py-20 md:py-28">
-        <Container className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-ink-3">
-            <div className="absolute inset-0 bg-[linear-gradient(160deg,#262a27_0%,#0f1110_70%)]" />
-            <div className="absolute inset-0 grid place-items-center text-center text-bone/40">
-              <div>
-                <p className="font-display text-8xl text-bone/15">CB</p>
-                <p className="mt-2 text-xs uppercase tracking-[0.2em]">Coach photo goes here</p>
-              </div>
-            </div>
-            <div className="absolute bottom-5 left-5 right-5 rounded-2xl bg-bone/95 p-4 backdrop-blur">
-              <p className="font-semibold">{brand.coach.name}</p>
-              <p className="text-sm text-ink/60">{brand.coach.title}</p>
-            </div>
-          </div>
-          <div>
-            <Eyebrow>Meet your coach</Eyebrow>
-            <blockquote className="font-display mt-6 text-4xl leading-[1.1] md:text-5xl">
-              &ldquo;{brand.coach.bio}&rdquo;
-            </blockquote>
-          </div>
-        </Container>
-      </section>
-
-      {/* How it works */}
-      <section className="py-20 md:py-28">
+      {/* 6. Other care options */}
+      <section className="border-t border-line bg-white/60 py-16 md:py-20">
         <Container>
-          <SectionHeading eyebrow="How it works" title="From assessment to results." />
-          <ol className="mt-12 grid gap-5 md:grid-cols-4">
-            {steps.map((s) => (
-              <li key={s.n} className="rounded-[24px] border border-line bg-white/60 p-7">
-                <span className="font-mono text-sm text-clay">{s.n}</span>
-                <h3 className="mt-6 text-xl font-semibold">{s.title}</h3>
-                <p className="mt-3 leading-relaxed text-ink/60">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </section>
-
-      {/* Comparison */}
-      <section className="border-t border-line py-20 md:py-28">
-        <Container className="grid gap-14 lg:grid-cols-[1fr_1.2fr]">
-          <SectionHeading
-            eyebrow={`Why ${brand.name}`}
-            title="Most clinics stop at the prescription."
-            sub="Medication gets the scale moving. Training and nutrition decide what you look and feel like when you get there."
-          />
-          <div className="overflow-hidden rounded-[28px] border border-line bg-white/70">
-            <div className="grid grid-cols-[1fr_90px_90px] border-b border-line px-6 py-4 text-xs font-medium uppercase tracking-wider text-ink/50 md:grid-cols-[1fr_120px_120px]">
-              <span />
-              <span className="text-center">Meds-only apps</span>
-              <span className="text-center text-ink">{brand.name}</span>
-            </div>
-            {compare.map(([label, a, b]) => (
-              <div
-                key={label}
-                className="grid grid-cols-[1fr_90px_90px] items-center border-b border-line/70 px-6 py-4 last:border-0 md:grid-cols-[1fr_120px_120px]"
-              >
-                <span className="text-[15px]">{label}</span>
-                <span className="grid place-items-center">{a ? <Check className="text-ink/40" /> : <span className="text-ink/25">—</span>}</span>
-                <span className="grid place-items-center">{b ? <Check className="text-clay" /> : null}</span>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="border-t border-line bg-bone-2/50 py-20 md:py-28">
-        <Container>
-          <SectionHeading
-            align="center"
-            eyebrow="Membership"
-            title="Simple tiers. Same price at every dose."
-            sub="Membership covers clinical care and coaching. Medication is billed separately at pharmacy prices — and you're never charged if a clinician finds treatment isn't right for you."
-          />
-          <div className="mt-16">
-            <TierCards />
-          </div>
-          <p className="mt-10 text-center text-sm text-ink/50">
-            Add-ons like the 12-Week Remade Challenge are available on the{" "}
-            <Link href="/pricing" className="underline underline-offset-4">
-              pricing page
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <SectionHeading eyebrow="Other care" title="More ways we can help" />
+            <Link href="/other-care" className="inline-flex min-h-11 items-center font-medium text-teal-deep underline underline-offset-4">
+              View all care
             </Link>
-            .
-          </p>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {otherCare.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/${c.slug}`}
+                className="group flex items-center gap-4 rounded-3xl border border-line bg-cream p-4 transition-colors hover:border-teal"
+              >
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-sand">
+                  <Image src={c.image} alt="" fill sizes="80px" className="object-cover" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-semibold">{c.name}</p>
+                  <p className="mt-1 text-sm text-muted">
+                    {c.status === "coming-soon" ? <span className="font-medium text-clay">Coming soon</span> : c.summary}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </Container>
       </section>
 
-      {/* FAQ */}
-      <section className="py-20 md:py-28">
-        <Container className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
-          <SectionHeading eyebrow="FAQ" title="Questions, answered." />
-          <Faq />
+      {/* 7. Plans and pricing */}
+      <section className="py-16 md:py-24">
+        <Container>
+          <SectionHeading
+            eyebrow="Plans & pricing"
+            title="Start with medical care. Add coaching if you like."
+            sub="One base plan for clinical care, with personal coaching as an optional add-on."
+          />
+          <div className="mt-10">
+            <Plans />
+          </div>
         </Container>
       </section>
 
-      {/* Final CTA */}
-      <section className="px-5 pb-24 md:px-8">
-        <div className="grain relative mx-auto max-w-7xl overflow-hidden rounded-[36px] bg-ink px-8 py-20 text-center text-bone md:py-28">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(212,255,79,0.16),transparent_70%)]" />
-          <h2 className="font-display relative text-5xl leading-[1] md:text-7xl">
-            Get <em className="text-volt">Remade.</em>
-          </h2>
-          <p className="relative mx-auto mt-6 max-w-md text-bone/65">
-            Free 3-minute assessment. No charge unless a clinician approves treatment.
+      {/* 8. Trust and FAQs */}
+      <section className="border-t border-line bg-sand py-16 md:py-24">
+        <Container>
+          <SectionHeading eyebrow="Our commitments" title="What you can expect from us" />
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {commitments.map((c) => (
+              <div key={c.title} className="rounded-3xl bg-cream p-5 md:p-6">
+                <div className="flex items-center gap-4 lg:block">
+                  <IconBadge name={c.icon} />
+                  <h3 className="font-semibold lg:mt-4">{c.title}</h3>
+                </div>
+                <p className="mt-2 leading-relaxed text-muted">{c.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <figure className="mt-12 rounded-3xl bg-white p-7 md:p-10">
+            <p className="text-sm font-semibold text-teal">A note from our founder</p>
+            <blockquote className="font-display mt-4 text-2xl leading-snug md:text-3xl">&ldquo;{brand.founder.note}&rdquo;</blockquote>
+            <figcaption className="mt-5 text-muted">
+              {brand.founder.name ? `${brand.founder.name}, ` : ""}
+              {brand.founder.role}, {brand.name}
+            </figcaption>
+          </figure>
+        </Container>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <SectionHeading eyebrow="FAQs" title="Questions, answered" />
+            <p className="mt-6 text-muted">
+              More answers on{" "}
+              <Link href="/how-it-works" className="inline-flex min-h-11 items-center text-teal-deep underline underline-offset-4">
+                How it works
+              </Link>
+            </p>
+          </div>
+          <Faq items={homeFaqs} />
+        </Container>
+      </section>
+
+      {/* Closing CTA */}
+      <section className="px-5 pb-16 md:px-8 md:pb-24">
+        <div className="mx-auto max-w-6xl rounded-[36px] bg-teal-deep px-6 py-14 text-center text-white md:py-20">
+          <h2 className="font-display text-balance text-3xl md:text-5xl">Ready to learn more?</h2>
+          <p className="mx-auto mt-4 max-w-lg text-lg text-white/80">
+            See how our weight-loss care works, or take a quick look at the assessment we&apos;re building.
           </p>
-          <div className="relative mt-9">
-            <ButtonLink href="/start" variant="volt">
-              Start your assessment
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <ButtonLink href="/weight-loss" variant="light">
+              Explore weight-loss care
             </ButtonLink>
+            <Link
+              href={assessmentCta.href}
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/40 px-6 font-medium text-white hover:border-white"
+            >
+              {assessmentCta.label}
+            </Link>
           </div>
         </div>
       </section>
